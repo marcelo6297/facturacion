@@ -36,7 +36,7 @@ public class WebAppSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/api").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api").access("hasRole('ADMIN')")
                 .antMatchers("/", "/home","/index.html")
                 .permitAll()
                 .anyRequest().authenticated()
