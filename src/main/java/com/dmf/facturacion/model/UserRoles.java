@@ -37,7 +37,7 @@ public class UserRoles implements Serializable{
         this.id = id;
     }
     
-    @Column(name="user_role")
+    @Column(name="user_role", unique = true)
     public String getRole() {
         return userRole;
     }

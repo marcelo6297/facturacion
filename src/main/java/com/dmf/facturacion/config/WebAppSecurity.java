@@ -5,7 +5,6 @@
  */
 package com.dmf.facturacion.config;
 
-import com.dmf.facturacion.servicios.CustomUserDetails;
 import com.dmf.facturacion.servicios.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

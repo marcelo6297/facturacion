@@ -5,51 +5,30 @@
  */
 package com.dmf.facturacion.controller;
 
-import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
-import java.util.List;
-import javax.validation.Valid;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author marcelo
  */
-@RestController
-@RequestMapping(value = "/api/cliente")
+@Controller
 public class ClienteController {
-
+    
     @Autowired
     ClienteJPARepository clienteRepository;
-
-    @GetMapping(value = "/{clienteId}")
-    public Cliente get(@PathVariable Long clienteId) {
-        System.out.println("Retornando un solo cliente"+clienteId+ "\r");
-        return clienteRepository.findOne(clienteId);
+    
+    /**
+     * Debe retornar la vista para la lista de clientes
+     * @return 
+     */
+    @GetMapping(value = "/cliente")
+    public String get() {
+        
+        return "static/cliente.html";
     }
     
-    @GetMapping
-    public List<Cliente> all(ModelMap model) {
-        System.out.println("Listando los usuarios\r");
-        return clienteRepository.findAll();
-    }
-
-
-    @PostMapping
-    public String add(@Valid Cliente cliente, BindingResult result) {
-        if (result.hasErrors()) {
-            return "clientes/new";
-        }
-        clienteRepository.save(cliente);
-        return "redirect:/clientes";
-    }
-
+    
 }
