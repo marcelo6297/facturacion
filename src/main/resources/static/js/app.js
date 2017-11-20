@@ -31,19 +31,31 @@ angular.module('app', ['ngRoute'])
 
   })
         .controller('principal', function ($scope, $http) {
-            $scope.greeting = {};
-//            $http.get('/api/cliente').then(function (response) {
-//                $scope.greeting = response.data;
-//                
-//            })
+            $scope.tabla = {};
+            $scope.tabla.encabezado = ["id","nombre","apellido","tipo","createdOn","estado"];
+            $scope.tabla.datos = {};
+            $http.get('/api/cliente').then(function (response) {
+                $scope.tabla.datos = response.data;
+                
+            })
         })
         .controller('navigation', function($scope) {
             var currentItem = 1;
             $scope.isSelected = function(item) {
-                return item === current;
+                return item === currentItem;
             };
             $scope.select= function(item ) {
                 currentItem = item;
             }
         })
         .controller('login', function($scope) {})
+        .controller('productos', function ($scope, $http) {
+            $scope.tabla = {};
+            $scope.cont = 0;
+            $scope.tabla.encabezado = ["id","nombre","descripcion"];
+            $scope.tabla.datos = {};
+            $http.get('/api/productos').then(function (response) {
+                $scope.tabla.datos = response.data;
+                
+            })
+        })

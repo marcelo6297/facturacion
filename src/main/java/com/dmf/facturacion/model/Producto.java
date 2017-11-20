@@ -4,6 +4,7 @@
  */
 package com.dmf.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
@@ -60,6 +61,7 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
     
+    @JsonIgnore
     @OneToMany(fetch= FetchType.LAZY, mappedBy="producto")
     public Set<ProductoPedido> getPedidos(){
         return this.productoPedidos;

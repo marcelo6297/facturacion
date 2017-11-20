@@ -6,5 +6,19 @@ Mostrar la lista de clientes, suministrados por una api
 -->
 
     <div>
-        Vista productos
+       <table border=0 cellspacing=0 >
+            <tr>
+                <th ng-repeat="header in tabla.encabezado">
+                    {{ header }}
+                </th>
+                
+            </tr>
+            <tr ng-repeat="item in tabla.datos">
+                <td ng-repeat="header in tabla.encabezado">
+                    {{ item[header] || '' }}
+                    
+                </td>
+                
+            </tr>
+        </table>
     </div>
