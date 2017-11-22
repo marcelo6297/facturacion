@@ -7,15 +7,18 @@ package com.dmf.facturacion.config;
 
 import com.dmf.facturacion.servicios.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
  *
@@ -25,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = UserServices.class)
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class WebAppSecurity extends WebSecurityConfigurerAdapter {
     //Configurar la clase que consulta la bbdd
     //
@@ -35,8 +39,8 @@ public class WebAppSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/api").access("hasRole('ADMIN')")
-                .antMatchers("/", "/home","/index.html")
+                .antMatchers("/api**").access("hasRole('ADMIN')")
+                .antMatchers("/css/**","/js/**","/login.html","/login", "/hello")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -45,7 +49,8 @@ public class WebAppSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
             .logout()
-                .permitAll();
+                .permitAll()
+            .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Autowired

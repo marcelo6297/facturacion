@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+Mostrar la lista de clientes, suministrados por una api
+    permitir integracion con AngularJS
+    permitir integracion con Bootstrap
+-->
+
+    <form role="form" ng-submit="save()">
+    <div class="form-group">
+        <label for="username">Nombre</label> 
+        <input type="text" class="form-control" id="username" name="username" ng-model="cliente.nombre"/>
+    </div>
+    <div class="form-group">
+        <label for="apellido">Apellido</label> 
+        <input type="text" class="form-control" id="apellido" name="apellido" ng-model="cliente.apellido"/>
+    </div>
+    <div class="form-group">
+        <label for="activo">Esta Activo?</label> 
+        <input type="checkbox" class="form-control" id="activo" name="activo" ng-model="cliente.activo"/>
+    </div>
+    
+        <button type="submit" class="btn btn-primary" >Submit</button>
+</form>

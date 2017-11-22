@@ -25,7 +25,7 @@ public class Cliente implements Serializable {
     private String          nombre;
     private String          apellido;
     private Tipo            tipo;
-    private Date            createdOn;
+    private Date            createdOn = new Date();
     private Boolean         activo;
     
     
