@@ -6,9 +6,9 @@
 package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Cliente;
+import com.dmf.facturacion.model.Tipo;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,15 +42,22 @@ public class ClienteRestController {
         System.out.println("Listando los usuarios\r");
         return clienteRepository.findAll();
     }
+    
+    @GetMapping(value = "/tipos")
+    public List<Tipo> allTipos(ModelMap model) {
+        System.out.println("Listando los tipos\r");
+        return clienteRepository.findTipoAll();
+    }
 
 
     @PostMapping
-    public String add(@RequestBody Cliente cliente, BindingResult result) {
+    public Cliente add(@RequestBody Cliente cliente, BindingResult result) {
         if (result.hasErrors()) {
-            return "clientes/new";
+            return cliente;
         }
         clienteRepository.save(cliente);
-        return "redirect:/api/cliente";
+        return cliente;
+//        return "redirect:/api/cliente";
     }
 
 }

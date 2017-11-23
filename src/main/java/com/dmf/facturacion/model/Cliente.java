@@ -5,6 +5,7 @@
 package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -89,6 +90,7 @@ public class Cliente implements Serializable {
     
     @OneToOne
     @JoinColumn(name="tipo_id" )
+    @JsonIgnoreProperties({"id", "createdOn"})
     public Tipo getTipo() {
         return tipo;
     }
