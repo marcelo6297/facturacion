@@ -90,7 +90,6 @@ public class Cliente implements Serializable {
     
     @OneToOne
     @JoinColumn(name="tipo_id" )
-    @JsonIgnoreProperties({"id", "createdOn"})
     public Tipo getTipo() {
         return tipo;
     }

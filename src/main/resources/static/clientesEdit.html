@@ -17,8 +17,8 @@ Mostrar la lista de clientes, suministrados por una api
         <input type="text" class="form-control" id="apellido" name="apellido" ng-model="cliente.apellido"/>
     </div>
     <div class="form-group">
-        <label for="apellido">Apellido</label> 
-        <select ng-model="cliente.tipo" ng-options="tipo.nombre for tipo in tipos">
+        <label for="apellido">Tipo</label> 
+        <select ng-model="cliente.tipo" ng-options="tipo.nombre for tipo in tipos track by tipo.id" >
 </select>
      </div>   
     <div class="form-group">
