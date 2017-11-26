@@ -5,6 +5,7 @@
 package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class Cliente implements Serializable {
     private String          nombre;
     private String          apellido;
     private Tipo            tipo;
-    private Date            createdOn;
+    private Date            createdOn = new Date();
     private Boolean         activo;
     
     

@@ -13,9 +13,13 @@ Mostrar la lista de clientes, suministrados por una api
                 </th>
             </tr>
             <tr ng-repeat="item in tabla.datos">
-                <td ng-repeat="header in tabla.encabezado">
-                    {{ item[header] || '' }}
-                </td>
+                <td> <a ng-href = "#!/clientes/{{item.id}}">{{item.id}}</a></td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.apellido}}</td>
+                <td>{{item.activo}}</td>
+                <td>{{item.tipo.nombre}}</td>
+                <td>{{item.createdOn}}</td>
             </tr>
         </table>
+        <a type="button" class="btn btn-primary" href="#!/clientes/new">Nuevo</a>
     </div>
