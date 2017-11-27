@@ -6,7 +6,7 @@ Mostrar la lista de clientes, suministrados por una api
 -->
 
     <div>
-       <table border=0 cellspacing=0 >
+        <table border=0 cellspacing=0 class="table table-bordered " >
             <tr>
                 <th ng-repeat="header in tabla.encabezado">
                     {{ header }}
@@ -14,10 +14,11 @@ Mostrar la lista de clientes, suministrados por una api
                 
             </tr>
             <tr ng-repeat="item in tabla.datos">
-                <td ng-repeat="header in tabla.encabezado">
-                    {{ item[header] || '' }}
-                    
-                </td>
+                <td >{{ item.id }}</td>
+                <td >{{ item.nombre }}</td>
+                <td >{{ item.descripcion }}</td>
+                <td >{{ item.iva }}</td>
+                <td >{{ item.precio | currency }}</td>
                 
             </tr>
         </table>

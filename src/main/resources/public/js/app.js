@@ -131,7 +131,7 @@ angular.module('app', ['ngRoute'])
         .controller('productos', function ($scope, $http) {
             $scope.tabla = {};
             $scope.cont = 0;
-            $scope.tabla.encabezado = ["id","nombre","descripcion"];
+            $scope.tabla.encabezado = ["id","nombre","descripcion","iva","precio"];
             $scope.tabla.datos = {};
             $http.get('/api/productos').then(function (response) {
                 $scope.tabla.datos = response.data;
