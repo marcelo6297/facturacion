@@ -11,11 +11,11 @@ angular.module('app', ['ngRoute'])
 
 	$routeProvider.when('/', {
 		templateUrl : 'clientes.html',
-		controller : 'principal'
+		controller : 'cliente'
 	})
         .when('/clientes', {
 		templateUrl : 'clientes.html',
-		controller : 'principal'
+		controller : 'cliente'
 	})
         .when('/clientes/:clienteId', {
 		templateUrl : 'clientesEdit.html',
@@ -40,17 +40,16 @@ angular.module('app', ['ngRoute'])
 
   })
         .controller('principal', function ($scope, $route,$http) {
-            $scope.tabla = {};
-            $scope.tabla.encabezado = ["id","nombre","apellido","activo","tipo","createdOn"];
-            $scope.tabla.datos = {};
-            $http.get('/api/cliente').then(function (response) {
-                $scope.tabla.datos = response.data;
-                
-            })
+            
         })
         .controller('cliente', function ($scope, $http, $routeParams) {
             $scope.tabla = {};
-            $scope.tabla.encabezado = ["id","nombre","apellido","tipo","createdOn","estado"];
+            $scope.tabla.encabezado = ["id","nombre","apellido","activo","tipo","createdOn", "actions"];
+            $scope.tabla.datos = {};
+            var reloadClientes = function() { $http.get('/api/cliente').then(function (response) {
+                $scope.tabla.datos = response.data;
+                
+            }) };
             $scope.cliente = {};
             $scope.tipos = [];
             
@@ -68,14 +67,27 @@ angular.module('app', ['ngRoute'])
             $scope.save = function() {
                 $http.post('/api/cliente/', $scope.cliente).then(function (response) {
                     if (response.status == 200 ){
-                        
-                        $scope.cliente = {};
                         $scope.showMsg = true;
+                    }
+                
+                });
+            }
+            
+            //funcion borrar
+            $scope.delete = function(id) {
+                var cliente = {id: id}
+                $http.post('/api/cliente/delete', cliente).then(function (response) {
+                    if (response.status == 200 ){
+                        
+                        
+                        $scope.showMsg = true;
+                        reloadClientes();
                         
                     }
                 
                 });
             }
+            reloadClientes();
         })
         .controller('navigation', function($rootScope,$scope, $http, $window,$location) {
             var currentItem = 1;

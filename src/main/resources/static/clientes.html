@@ -6,6 +6,9 @@ Mostrar la lista de clientes, suministrados por una api
 -->
 
     <div>
+        <div  class="alert alert-success" ng-show="showMsg">
+            Eliminado con exito!!!;
+        </div>
         <table class="table table-bordered">
             <tr>
                 <th ng-repeat="header in tabla.encabezado">
@@ -19,6 +22,7 @@ Mostrar la lista de clientes, suministrados por una api
                 <td>{{item.activo}}</td>
                 <td>{{item.tipo.nombre}}</td>
                 <td>{{item.createdOn}}</td>
+                <td><a ng-click="delete(item.id)" class="btn btn-primary">Borrar</a></td>
             </tr>
         </table>
         <a type="button" class="btn btn-primary" href="#!/clientes/new">Nuevo</a>
