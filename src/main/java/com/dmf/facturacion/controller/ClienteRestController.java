@@ -7,14 +7,15 @@ package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.Tipo;
+import com.dmf.facturacion.model.TipoCliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,9 +62,11 @@ public class ClienteRestController {
     }
     
     @GetMapping(value = "/tipos")
-    public List<Tipo> allTipos(ModelMap model) {
+    public List<TipoCliente> allTipos(ModelMap model) {
         System.out.println("Listando los tipos\r");
-        return clienteRepository.findTipoAll();
+        List<TipoCliente> tipos = Arrays.asList(new TipoCliente[]
+        {TipoCliente.OCACIONAL,TipoCliente.MINORISTA,TipoCliente.MAYORISTA,TipoCliente.DISTRIBUIDOR});
+        return tipos;
     }
 
 

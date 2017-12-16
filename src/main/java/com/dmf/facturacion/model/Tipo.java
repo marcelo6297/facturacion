@@ -7,14 +7,12 @@ package com.dmf.facturacion.model;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author marcelo
  */
-@Entity
-@XmlRootElement
+
 public class Tipo implements Serializable {
     
     

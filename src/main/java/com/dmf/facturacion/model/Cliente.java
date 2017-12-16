@@ -5,7 +5,6 @@
 package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -20,14 +19,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Cliente implements Serializable {
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
     
     
     private Long            id;
     private String          nombre;
     private String          apellido;
-    private Tipo            tipo;
-    private Date            createdOn = new Date();
+    private String          ruc;
+    private String          telefono;
+    private Direccion       direccion;
+    private TipoCliente     tipo;
     private Boolean         activo;
+    private Date            fechaNacimiento;
+    private Date            createdOn = new Date();
     
     
     private Set<Pedido> pedidos;
@@ -88,13 +99,13 @@ public class Cliente implements Serializable {
         this.nombre = nombre;
     }
     
-    @OneToOne
-    @JoinColumn(name="tipo_id" )
-    public Tipo getTipo() {
+    
+    @Enumerated(EnumType.STRING)
+    public TipoCliente getTipo() {
         return tipo;
     }
 
-    public void setTipo(Tipo tipo) {
+    public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
     }
     
@@ -106,21 +117,50 @@ public class Cliente implements Serializable {
     public void setActivo(Boolean activo) {
         this.activo = activo;
     }
-    
-    
 
-    public Cliente(Long id, String nombre, String apellido, Tipo tipo, Date createdOn, Set<Pedido> pedidos) {
+    public Cliente(Long id, String nombre, String apellido, String ruc, String telefono, Direccion direccion, TipoCliente tipo, Boolean activo, Set<Pedido> pedidos) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.ruc = ruc;
+        this.telefono = telefono;
+        this.direccion = direccion;
         this.tipo = tipo;
-        this.createdOn = createdOn;
+        this.activo = activo;
         this.pedidos = pedidos;
     }
     
+    @Column(nullable = false, unique = true)
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+    
+    @Column
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+    
+    @Embedded
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
+    }
     
     
+
     
-    
+ 
 }
+
 
