@@ -4,6 +4,7 @@
  */
 package com.dmf.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -40,7 +41,8 @@ public class ProductoPedido implements Serializable {
 
     public ProductoPedido() {
     }
-
+    
+    @Column(nullable = false)
     public Double getCantidad() {
         return cantidad;
     }
@@ -78,6 +80,7 @@ public class ProductoPedido implements Serializable {
     }
     
     @ManyToOne
+    @JsonIgnore
     public Pedido getPedido() {
         return pedido;
     }

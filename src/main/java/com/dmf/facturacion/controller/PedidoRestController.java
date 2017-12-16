@@ -6,11 +6,17 @@
 package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Pedido;
+import com.dmf.facturacion.model.ProductoPedido;
 import com.dmf.facturacion.repositorios.PedidoJPARepository;
+import com.dmf.facturacion.repositorios.ProductoPedidoJPARepository;
+import com.dmf.facturacion.servicios.PedidoServices;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,27 +35,37 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PedidoRestController {
     
     @Autowired
-    PedidoJPARepository pedidoRepository;
+    PedidoServices services;
     
     @GetMapping
     public List<Pedido> all() {
-        return pedidoRepository.findAll();
+        return services.findAll();
     }
     
     /**
      * Guardar los datos del pedido
+     * falta validar que todos los montos enviados sean los de la base de datos
+     * es responsalibidad del servicio validar esas cosas o es responsabilidad del
+     * validador?
+     * Guardar en el log de eventos cuando un usuario intenta guardar datos invalidos
+     * 
      * @param pedido
      * @param result
      * @throws java.lang.Exception si el servicio no puede guardar el objeto
      */
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody Pedido pedido, BindingResult result) throws Exception {
+    
+    public ResponseEntity<Pedido> save(@RequestBody Pedido pedido, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
-        pedidoRepository.save(pedido);
+        
+//       
+        services.save(pedido);
+        
+        
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
 				"/{id}").buildAndExpand(pedido.getId()).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(pedido);
     }
 }
