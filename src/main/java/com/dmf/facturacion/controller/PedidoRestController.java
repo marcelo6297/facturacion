@@ -6,17 +6,11 @@
 package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Pedido;
-import com.dmf.facturacion.model.ProductoPedido;
-import com.dmf.facturacion.repositorios.PedidoJPARepository;
-import com.dmf.facturacion.repositorios.ProductoPedidoJPARepository;
 import com.dmf.facturacion.servicios.PedidoServices;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
