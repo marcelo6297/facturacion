@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Cliente implements Serializable {
 
+    @Temporal(TemporalType.DATE)
     public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
