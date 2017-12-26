@@ -6,10 +6,8 @@
 package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Cliente;
-import com.dmf.facturacion.model.Tipo;
 import com.dmf.facturacion.model.TipoCliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.ui.ModelMap;
@@ -29,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author marcelo
  */
 @RestController
-@RequestMapping(value = "/api/cliente")
+@RequestMapping(value = "/api/clientes")
 public class ClienteRestController {
 
     @Autowired
@@ -81,13 +79,17 @@ public class ClienteRestController {
     }
     
     
-    @PostMapping( value="/delete")
-    public void delete(@RequestBody Cliente cliente, BindingResult result){
-        if (result.hasErrors()) {
-            return ;
-        }
-        clienteRepository.delete(cliente);
+    @PostMapping(value = "/delete")
+    public void deleteAll(@RequestBody Integer[] ids ){
+//        if (result.hasErrors()) {
+//            return ;
+//        }
+        System.out.println("com.dmf.facturacion.controller.ClienteRestController.delete()");
+        System.out.println(ids);
+//        clienteRepository.delete(cliente);
         return ;
     }
+    
+    
 
 }
