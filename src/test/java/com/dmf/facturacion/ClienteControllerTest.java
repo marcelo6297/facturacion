@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  * @author marcelo
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ClienteControllerTest {
     @Test

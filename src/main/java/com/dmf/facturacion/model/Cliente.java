@@ -5,6 +5,7 @@
 package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -18,6 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
+@JsonPropertyOrder({"id", "nombre", "descripcion", "precio", "iva" })
 public class Cliente implements Serializable {
 
     @Temporal(TemporalType.DATE)

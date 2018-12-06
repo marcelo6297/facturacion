@@ -7,6 +7,12 @@ package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.repositorios.ProductoJPARepository;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +43,23 @@ public class ProductoRestController {
     
     @PostMapping("/upload")
     @ResponseBody
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+    public List<Producto> handleFileUpload(@RequestParam("file") MultipartFile file,
+            RedirectAttributes redirectAttributes) throws IOException {
 
 //        storageService.store(file);
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
+        
+        List<Producto> result = new ArrayList<>();
+        char delimitador = ',';
+        CsvMapper mapper = new CsvMapper();
+//        CsvSchema schema =  mapper.schemaFor(Producto.class);
+        MappingIterator<Producto> it = mapper.readerWithTypedSchemaFor(Producto.class).readValues(file.getBytes());
+                
+        while (it.hasNext()) {
+            result.add(it.next())  ;
+        }
+        
+        productoRepository.save(result);
 
-        return "Subido Ok!!!"+file.getOriginalFilename();
+        return result;
     }
 }

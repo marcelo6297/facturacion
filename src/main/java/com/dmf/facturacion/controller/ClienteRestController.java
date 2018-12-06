@@ -8,12 +8,14 @@ package com.dmf.facturacion.controller;
 import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.TipoCliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,38 +37,36 @@ public class ClienteRestController {
 
     @GetMapping(value = "{clienteId}")
     public Cliente get(@PathVariable Long clienteId) {
-        System.out.println("Retornando un solo cliente"+clienteId+ "\r");
+        System.out.println("Retornando un solo cliente" + clienteId + "\r");
         return clienteRepository.findOne(clienteId);
     }
-    
+
     @GetMapping
     public List<Cliente> all(ModelMap model) {
         System.out.println("Listando los usuarios\r");
         return clienteRepository.findAll();
     }
-    
+
     /**
      * Obtener los datos filtrados de los clientes
+     *
      * @param model
-     * @return 
+     * @return
      */
-    @GetMapping(value="/search")
+    @GetMapping(value = "/search")
     public List<Cliente> filter(@RequestParam("search") String search) {
         System.out.printf("Buscando %s \r", search);
-        
 
-        return clienteRepository.searchAll(search,search);
-        
+        return clienteRepository.searchAll(search, search);
+
     }
-    
+
     @GetMapping(value = "/tipos")
     public List<TipoCliente> allTipos(ModelMap model) {
         System.out.println("Listando los tipos\r");
-        List<TipoCliente> tipos = Arrays.asList(new TipoCliente[]
-        {TipoCliente.OCACIONAL,TipoCliente.MINORISTA,TipoCliente.MAYORISTA,TipoCliente.DISTRIBUIDOR});
+        List<TipoCliente> tipos = Arrays.asList(new TipoCliente[]{TipoCliente.OCACIONAL, TipoCliente.MINORISTA, TipoCliente.MAYORISTA, TipoCliente.DISTRIBUIDOR});
         return tipos;
     }
-
 
     @PostMapping
     public Cliente save(@RequestBody Cliente cliente, BindingResult result) {
@@ -77,19 +77,16 @@ public class ClienteRestController {
         return cliente;
 //        return "redirect:/api/cliente";
     }
-    
-    
+
     @PostMapping(value = "/delete")
-    public void deleteAll(@RequestBody Integer[] ids ){
-//        if (result.hasErrors()) {
-//            return ;
-//        }
-        System.out.println("com.dmf.facturacion.controller.ClienteRestController.delete()");
-        System.out.println(ids);
-//        clienteRepository.delete(cliente);
-        return ;
+    @Transactional
+    public Cliente deleteAll(@RequestBody Long[] ids) {
+        
+        for (Long id : ids) 
+            clienteRepository.delete(id);
+        
+        return new Cliente();
+
     }
-    
-    
 
 }

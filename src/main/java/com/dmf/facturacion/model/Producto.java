@@ -5,6 +5,7 @@
 package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
@@ -14,14 +15,25 @@ import javax.persistence.*;
  * @author marcelo
  */
 @Entity
+@JsonPropertyOrder({"id", "codigo","nombre", "descripcion", "precio", "iva" })
 public class Producto implements Serializable {
     
     private Long                    id;
+    private String                  codigo;
     private String                  nombre;
     private String                  descripcion;
     private Double                  precio;
     private Integer                 iva;
     private Set<ProductoPedido>     productoPedidos;
+    
+    
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
     
     
     @Column(name="descripcion")

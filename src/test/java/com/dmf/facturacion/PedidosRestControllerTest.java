@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
  *
  * @author marcelo
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @WebMvcTest(PedidoRestController.class)
 public class PedidosRestControllerTest {
