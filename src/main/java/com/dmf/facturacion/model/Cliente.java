@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
-@JsonPropertyOrder({"id", "nombre", "descripcion", "precio", "iva" })
+@JsonPropertyOrder({"id", "nombre", "apellido", "ruc", "direccion1", "direccion2","telefono", "tipo" , "activo", "fechaNacimiento", "createdOn"})
 public class Cliente implements Serializable {
 
     @Temporal(TemporalType.DATE)
@@ -37,7 +37,25 @@ public class Cliente implements Serializable {
     private String          apellido;
     private String          ruc;
     private String          telefono;
-    private Direccion       direccion;
+   
+    private String          direccion1;
+    private String          direccion2;
+
+    public String getDireccion1() {
+        return direccion1;
+    }
+
+    public void setDireccion1(String direccion1) {
+        this.direccion1 = direccion1;
+    }
+
+    public String getDireccion2() {
+        return direccion2;
+    }
+
+    public void setDireccion2(String direccion2) {
+        this.direccion2 = direccion2;
+    }
     private TipoCliente     tipo;
     private Boolean         activo;
     private Date            fechaNacimiento;
@@ -121,17 +139,7 @@ public class Cliente implements Serializable {
         this.activo = activo;
     }
 
-    public Cliente(Long id, String nombre, String apellido, String ruc, String telefono, Direccion direccion, TipoCliente tipo, Boolean activo, Set<Pedido> pedidos) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.ruc = ruc;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.tipo = tipo;
-        this.activo = activo;
-        this.pedidos = pedidos;
-    }
+   
     
     @Column(nullable = false, unique = true)
     public String getRuc() {
@@ -150,15 +158,22 @@ public class Cliente implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
-    @Embedded
-    public Direccion getDireccion() {
-        return direccion;
-    }
 
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
+    public Cliente(Long id, String nombre, String apellido, String ruc, String telefono, String direccion1, String direccion2, TipoCliente tipo, Boolean activo, Date fechaNacimiento, Set<Pedido> pedidos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.ruc = ruc;
+        this.telefono = telefono;
+        this.direccion1 = direccion1;
+        this.direccion2 = direccion2;
+        this.tipo = tipo;
+        this.activo = activo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.pedidos = pedidos;
     }
+    
+   
     
     
 

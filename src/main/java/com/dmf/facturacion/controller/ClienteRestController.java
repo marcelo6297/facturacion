@@ -8,9 +8,16 @@ package com.dmf.facturacion.controller;
 import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.TipoCliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
-import java.util.ArrayList;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -88,5 +95,39 @@ public class ClienteRestController {
         return new Cliente();
 
     }
+    
+    @GetMapping(value = "/exportar" , produces = "text/csv")
+    
+    public void getCsv(HttpServletResponse response) {
+        
+        
+        
+        List<Cliente>  clientes =  clienteRepository.findAll();
+        
+        String headerKey = "Content-Disposition";
+        String headerValue = ("attachment; filename='ClientesCSV.csv'");
+        response.setHeader(headerKey, headerValue);
+        
+        headerKey = "Cache-control";
+        headerValue = ("no-cache");
+        response.setHeader(headerKey, headerValue);
 
+        
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema schema = mapper.schemaFor(Cliente.class);
+        
+        ObjectWriter writer = mapper.writer(schema.withLineSeparator("\n"));
+        
+        try {
+          writer.writeValue(response.getOutputStream(), clientes);
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    
 }
