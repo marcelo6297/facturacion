@@ -7,6 +7,8 @@ package com.dmf.facturacion.repositorios;
 
 import com.dmf.facturacion.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,4 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ProductoJPARepository extends JpaRepository<Producto, Long>{
     
+    @Modifying
+    @Query(value = "Update producto as p set p.total_ingreso = (SELECT sum(cd.cantidad) FROM compra_detalle as cd WHERE cd.producto_id = p.id ), p.total_stock = p.stock_inicial + p.total_ingreso", nativeQuery = true)
+    public void updateStock();
 }
