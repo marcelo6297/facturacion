@@ -5,18 +5,15 @@
  */
 package com.dmf.facturacion.servicios;
 
-import com.dmf.facturacion.model.Compra;
-import com.dmf.facturacion.model.CompraDetalle;
 import com.dmf.facturacion.model.Producto;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.dmf.facturacion.model.Venta;
+import com.dmf.facturacion.model.VentaDetalle;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -31,36 +28,66 @@ public class ProductoServiceTest {
     @Test
     public void guardaProducto(){
         
-        Producto p = new Producto(1l, "A001", "Test", "Producto cargado en test", 20.0, 23.0,
-                10, 25.0, 20, 20.00, 20.00, 20.00, 20.00, 20.00, 20.00, "Nota cargada en test", Boolean.TRUE);
-        productoServices.saveProducto(p);
+        Integer[] iva = new Integer[] {0,5,10,10}; 
+        
+        for (int i = 0 ;i<4 ; i++){
+        
+            Producto p = new Producto();
+            p.setCodigo("A00"+i);
+            p.setNombre("TEST"+i);
+            p.setDescripcion("Descripcion TEST"+i);
+            p.setPrecioCompra(100.0);
+            p.setPorcenGan(10);
+            
+            p.setIva(iva[i]);
+            p.setStockInicial(10.0);
+            Double pv = (1 + (p.getPorcenGan()/100.0)) * p.getPrecioCompra();
+            p.setPrecioVenta(pv);
+            p.setActivo(Boolean.TRUE);
+            productoServices.saveProducto(p);
+        
+        }
+    
+    
+    }
+    
+    @Test
+    public void VentaDetalleTest(){
+        Producto p = new Producto();
+        p.setPrecioVenta(15.0);
+        p.setIva(10);
+        Venta v = new Venta();
+        v.setCliente("Test");
+        
+        VentaDetalle vd = new VentaDetalle();
+        vd.setVenta(v);
+        //Valores enteros de descuentos
+        vd.setProcenDesc(10);
+        vd.setProducto(p);
+        vd.setCantidad(30.0);
+        vd.setPrecio(p.getPrecioVenta());
+        
+        vd.calcularImpuestos();
+        
+       assertEquals(0.0,0.0, 0.01);
+        assertEquals(0.0,vd.getIva5(), 0.01);
+        assertEquals(405.0,vd.getIva10(), 0.01);
+        
+        p.setIva(5);
+        vd.calcularImpuestos();
+        assertEquals(0.0,vd.getExcentas(), 0.01);
+        assertEquals(405.0,vd.getIva5(), 0.01);
+        assertEquals(0.0,vd.getIva10(), 0.01);
+        
+        p.setIva(0);
+        vd.calcularImpuestos();
+        assertEquals(405.0,vd.getExcentas(), 0.01);
+        assertEquals(0.0,vd.getIva10(), 0.01);
+        assertEquals(0.0,vd.getIva5(), 0.01);
+        
     }
        
-    @Test
-    @Transactional
-    public void guardarCompraConProducto(){
-        
-        Producto p = productoServices.findById(4l);
-        Compra c = new Compra();
-        c.setProveedor("Test");
-        c.setFechaCompra(new Date());
-        
-        List<CompraDetalle> detalles = new ArrayList<>();
-        
-        CompraDetalle cd = new CompraDetalle();
-        cd.setCompra(c);
-        cd.setProducto(p);
-        cd.setCantidad(10.0);
-        cd.setPrecioCompra(20.0);
-        cd.setIva(10);
-        cd.setProcenGan(25);
-        
-        detalles.add(cd);
-        
-        productoServices.saveCompra(c, detalles);
-        
-        
-    }
+    
     
     
     

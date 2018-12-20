@@ -8,7 +8,10 @@ package com.dmf.facturacion.servicios;
 import com.dmf.facturacion.model.Compra;
 import com.dmf.facturacion.model.CompraDetalle;
 import com.dmf.facturacion.model.Producto;
-import java.util.List;
+import com.dmf.facturacion.model.Venta;
+import com.dmf.facturacion.model.VentaDetalle;
+import com.dmf.facturacion.repositorios.CompraJpaRepo;
+import com.dmf.facturacion.repositorios.ProductoJPARepository;
 
 /**
  *
@@ -26,8 +29,13 @@ public interface ProductoServices {
      * @param detalles
      * @throws NullPointerException 
      */
-    public void saveCompra(Compra compra, List<CompraDetalle> detalles) throws NullPointerException;
+    public void saveCompra(Compra compra, Iterable<CompraDetalle> detalles) throws NullPointerException;
     
     public Producto findById(Long id);
     
+    public ProductoJPARepository productoRepo();
+    
+    public CompraJpaRepo compraRepo();
+    
+    public void saveVenta(Venta venta, Iterable<VentaDetalle> detalles) throws NullPointerException, IllegalArgumentException;
 }

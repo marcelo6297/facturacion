@@ -19,7 +19,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * Debe poder filtrarse por categoria
  */
 @Entity
-@JsonPropertyOrder({"id", "codigo","nombre", "descripcion", "precio", "iva" })
+
 public class Producto implements Serializable {
     
     @Id
@@ -37,23 +37,21 @@ public class Producto implements Serializable {
     private String                  descripcion;
     
     private Double                  precio;
-    private Double                  precioCompra;
-    private Integer                 porcenGan;
-    private Double                  precioVenta;
-    private Integer                 iva;
-    private Double                  stockInicial;
-    private Double                  stockMinimo;
-    private Double                  stockPreOrden;
-    private Double                  totalIngreso;
-    private Double                  totalSalida;
-    private Double                  totalStock;
+    private Double                  precioCompra   = 0.0;
+    private Integer                 porcenGan      = 35;
+    private Double                  precioVenta    = 0.0;
+    private Integer                 iva            = 0;
+    
+    private Double                  stockInicial   = 0.0;
+    private Double                  stockMinimo    = 0.0;
+    private Double                  stockPreOrden  = 0.0;
+    private Double                  totalIngreso   = 0.0;
+    private Double                  totalSalida    = 0.0;
+    private Double                  totalStock     = 0.0;
     private String                  notas;
     private Boolean                 activo;
     
-    @JsonIgnore
-    @OneToMany(fetch= FetchType.LAZY, mappedBy="producto")
-    private Set<ProductoPedido>     productoPedidos;
-    
+       
     
     public String getCodigo() {
         return codigo;
@@ -98,14 +96,7 @@ public class Producto implements Serializable {
     }
     
     
-    public Set<ProductoPedido> getPedidos(){
-        return this.productoPedidos;
-    }
-
-    public void setPedidos(Set<ProductoPedido> productoPedidos) {
-        this.productoPedidos = productoPedidos;
-    }
-
+   
     public Integer getIva() {
         return iva;
     }

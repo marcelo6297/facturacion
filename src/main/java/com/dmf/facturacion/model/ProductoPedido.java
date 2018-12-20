@@ -79,7 +79,7 @@ public class ProductoPedido implements Serializable {
         this.nombreProducto = nombreProducto;
     }
     
-    @ManyToOne
+    
     @JsonIgnore
     public Pedido getPedido() {
         return pedido;

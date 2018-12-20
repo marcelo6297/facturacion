@@ -10,9 +10,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 
 /**
  * Representa una compra hecha a un proveedor, en principio no existe la tabla 
@@ -24,8 +27,7 @@ public class Compra implements Serializable{
     Long                id;
     String              proveedor;
     Date                fechaCompra;
-    Double              totalCompra;
-    @JsonIgnore
+    Double              totalCompra = 0.0;    
     Set<CompraDetalle>  compraDetalles;
 
     public Compra() {
@@ -74,6 +76,20 @@ public class Compra implements Serializable{
     public void setTotalCompra(Double totalCompra) {
         this.totalCompra = totalCompra;
     }
-
     
+    @OneToMany(fetch= FetchType.LAZY, mappedBy="compra")
+    public Set<CompraDetalle> getCompraDetalles() {
+        return compraDetalles;
+    }
+
+    public void setCompraDetalles(Set<CompraDetalle> compraDetalles) {
+        this.compraDetalles = compraDetalles;
+    }
+
+    @PrePersist
+    public void calcularTotal() {
+        for(CompraDetalle cd : this.compraDetalles) {
+            totalCompra += cd.getSubTotal();
+        }
+    }
 }
