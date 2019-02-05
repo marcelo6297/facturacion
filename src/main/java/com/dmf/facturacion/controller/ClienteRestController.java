@@ -22,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,7 +64,7 @@ public class ClienteRestController {
     @GetMapping(value = "/search")
     public List<Cliente> filter(@RequestParam("search") String search) {
         System.out.printf("Buscando %s \r", search);
-
+       
         return clienteRepository.searchAll(search, search);
 
     }
@@ -128,6 +129,11 @@ public class ClienteRestController {
             e.printStackTrace();
         }
 
+    }
+    
+    @GetMapping(value = "/ruc")
+    public Boolean ruc(@RequestParam("ruc") String ruc) {
+        return clienteRepository.findOneByRuc(ruc) instanceof Cliente ;
     }
     
 }
