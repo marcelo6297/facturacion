@@ -39,29 +39,27 @@ public class ProductoServicesImpl implements ProductoServices{
     
     
     @Override
-    public void saveCompra(Compra compra, Iterable<CompraDetalle> detalles) throws NullPointerException{
+    public void saveCompra(Compra compra) throws NullPointerException{
             //Guarda las Compras
             //Guarda los detalles
             //Actualiza el stock
            
 //            Actualizar la compra
             //Antes de guardar chequear los valores
-            //Lista de productos a actualizar precios
-            List<Producto> productos = new ArrayList<>();
-            for (CompraDetalle det: detalles) {
-                //verificar la estrategia de seteado de precio venta
-                Producto p = det.getProducto();
-                det.setCompra(compra);
-                det.calclularTotal();
-                
-                p.setPrecioVenta(det.getPrecioVenta());
-                
-                productos.add(p);
-
+            //Lista de productos a actualizar precios;
+            this.calcularTotales(compra);
+            if (compra.getId() != null) {
+                System.out.println("editar");
+                compraDetalleJpaRepo.deleteByCompra(compra);
+            }
+            else{
+                System.out.println("nuevo");
+            
             }
             compraRepo.save(compra);
-            compraDetalleJpaRepo.save(detalles);
-            productoRepo.save(productos);
+            compraDetalleJpaRepo.save(compra.getCompraDetalles());
+            //Actualizar los precios de los productos modificados y auditar
+            
             productoRepo.updateStock();
     }
     
@@ -105,4 +103,28 @@ public class ProductoServicesImpl implements ProductoServices{
     public CompraJpaRepo compraRepo() {
         return this.compraRepo;
     }
+
+    @Override
+    public void calcularTotales(Compra c) {
+        System.out.println("ProductoServiceImpl.calcularTotales");
+        Double totalExcentas = 0.0, totalIva5= 0.0, totalIva10 = 0.0;
+        for(CompraDetalle cd : c.getCompraDetalles()) {
+            cd.setCompra(c);
+            cd.calclularTotal();
+            switch(cd.getPorcenIva() ) {
+                case 0: totalExcentas += cd.getSubTotal();
+                        break;
+                case 5: totalIva5 += cd.getSubTotal()+cd.getMontoIva();
+                        break;
+                case 10: totalIva10 += cd.getSubTotal()+cd.getMontoIva();
+                        break;
+            
+            }
+        }
+        c.setTotalExcentas(totalExcentas);
+        c.setTotalIva5(totalIva5);
+        c.setTotalIva10(totalIva10);
+        c.setTotalGeneral(totalExcentas+totalIva5+totalIva10);
+    }    
+    
 }

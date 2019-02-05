@@ -49,18 +49,14 @@ public class ProductoServiceCompraTest {
             cd.setProducto(p);
             cd.setCantidad(10.0);
             cd.setPrecioCompra(20.0);
-            cd.setIva(p.getIva());
+            cd.setPorcenIva(p.getPorcenIva());
             cd.setPorcenGan(25);
-            Double subTotal = cd.getPrecioCompra() * cd.getCantidad();
-            cd.setSubTotal(subTotal);
-            
-            Double subTotalIva = cd.getPrecioCompra() * cd.getCantidad() * cd.getIva() / 100.0;
-            cd.setSubTotalIva(subTotalIva);
+            cd.calclularTotal();
             detalles.add(cd);
             i++;
         }
         
-        productoServices.saveCompra(c, detalles);
+        productoServices.saveCompra(c);
         
         
     }
@@ -84,7 +80,7 @@ public class ProductoServiceCompraTest {
             cd.setCantidad(10.0);
             cd.setPrecioCompra(precios[i]);
             cd.setPrecioVenta(precios[i]);
-            cd.setIva(p.getIva());
+            cd.setPorcenIva(p.getPorcenIva());
             cd.setPorcenGan(porcenGan[i]);
             cd.calclularTotal();
             detalles.add(cd);

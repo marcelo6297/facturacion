@@ -29,7 +29,7 @@ public interface ProductoServices {
      * @param detalles
      * @throws NullPointerException 
      */
-    public void saveCompra(Compra compra, Iterable<CompraDetalle> detalles) throws NullPointerException;
+    public void saveCompra(Compra compra) throws NullPointerException;
     
     public Producto findById(Long id);
     
@@ -38,4 +38,6 @@ public interface ProductoServices {
     public CompraJpaRepo compraRepo();
     
     public void saveVenta(Venta venta, Iterable<VentaDetalle> detalles) throws NullPointerException, IllegalArgumentException;
+    
+    public void calcularTotales(Compra c);
 }

@@ -36,11 +36,13 @@ public class Producto implements Serializable {
     @Size(min = 3, max = 1024, message = "La longitud del texto esta fuera del rango")
     private String                  descripcion;
     
-    private Double                  precio;
+    private String                  notas;
+    private Boolean                 activo;
+    
     private Double                  precioCompra   = 0.0;
     private Integer                 porcenGan      = 35;
     private Double                  precioVenta    = 0.0;
-    private Integer                 iva            = 0;
+    private Integer                 porcenIva            = 0;
     
     private Double                  stockInicial   = 0.0;
     private Double                  stockMinimo    = 0.0;
@@ -48,8 +50,7 @@ public class Producto implements Serializable {
     private Double                  totalIngreso   = 0.0;
     private Double                  totalSalida    = 0.0;
     private Double                  totalStock     = 0.0;
-    private String                  notas;
-    private Boolean                 activo;
+    
     
        
     
@@ -87,22 +88,15 @@ public class Producto implements Serializable {
     }
 
     
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-    
+      
     
    
-    public Integer getIva() {
-        return iva;
+    public Integer getPorcenIva() {
+        return porcenIva;
     }
 
-    public void setIva(Integer iva) {
-        this.iva = iva;
+    public void setPorcenIva(Integer iva) {
+        this.porcenIva = iva;
     }
     
     
@@ -199,24 +193,9 @@ public class Producto implements Serializable {
         this.activo = activo;
     }
 
-    public Producto(Long id, String codigo, String nombre, String descripcion, Double precio, Double precioCompra, Integer porcenGan, Double precioVenta, Integer iva, Double stockInicial, Double stockMinimo, Double stockPreOrden, Double totalIngreso, Double totalSalida, Double totalStock, String notas, Boolean activo) {
-        this.id = id;
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.precioCompra = precioCompra;
-        this.porcenGan = porcenGan;
-        this.precioVenta = precioVenta;
-        this.iva = iva;
-        this.stockInicial = stockInicial;
-        this.stockMinimo = stockMinimo;
-        this.stockPreOrden = stockPreOrden;
-        this.totalIngreso = totalIngreso;
-        this.totalSalida = totalSalida;
-        this.totalStock = totalStock;
-        this.notas = notas;
-        this.activo = activo;
+    @PrePersist
+    public void calcularStock(){
+        System.out.println("Producto PrePersit");
     }
 
    

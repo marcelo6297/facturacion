@@ -43,28 +43,15 @@ public class VentaDetalle implements Serializable{
     
     private Double                  cantidad    =0.0;
     private Double                  precio      =0.0;
-    private Integer                 procenDesc  =0;
-    private Double                  excentas    =0.0;
-    private Double                  iva5        =0.0;
-    private Double                  iva10       =0.0;
+    private Integer                 porcenDesc  =0;
+    private Integer                 porcenIva  =0;
+    private Double                  montoIva       =0.0;
+    private Double                  subTotal       =0.0;
 
     public VentaDetalle() {
     }
 
-    public VentaDetalle(Long id, Venta venta, Producto producto, String codigo, String nombre, String descripcion, Double cantidad, Double precio, Integer procenDesc, Double excentas, Double iva5, Double iva10) {
-        this.id = id;
-        this.venta = venta;
-        this.producto = producto;
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.procenDesc = procenDesc;
-        this.excentas = excentas;
-        this.iva5 = iva5;
-        this.iva10 = iva10;
-    }
+    
 
     public Long getId() {
         return id;
@@ -91,6 +78,7 @@ public class VentaDetalle implements Serializable{
         this.nombre = producto.getNombre();
         this.codigo = producto.getCodigo();
         this.descripcion = producto.getDescripcion();
+        this.porcenIva = producto.getPorcenIva();
     }
 
     public String getCodigo() {
@@ -137,63 +125,47 @@ public class VentaDetalle implements Serializable{
         
     }
 
-    public Integer getProcenDesc() {
-        return procenDesc;
+    public Integer getPorcenDesc() {
+        return porcenDesc;
     }
     
-    public void setProcenDesc(Integer procenDesc) {
-        this.procenDesc = procenDesc;
+    public void setPorcenDesc(Integer procenDesc) {
+        this.porcenDesc = procenDesc;
     }
 
-    public Double getExcentas() {
-        return excentas;
+    public Integer getPorcenIva() {
+        return porcenIva;
     }
 
-    public void setExcentas(Double excentas) {
-        this.excentas = excentas;
+    public void setPorcenIva(Integer procenIva) {
+        this.porcenIva = procenIva;
     }
 
-    public Double getIva5() {
-        return iva5;
+    public Double getMontoIva() {
+        return montoIva;
     }
 
-    public void setIva5(Double iva5) {
-        this.iva5 = iva5;
+    public void setMontoIva(Double montoIva) {
+        this.montoIva = montoIva;
     }
 
-    public Double getIva10() {
-        return iva10;
+    public Double getSubTotal() {
+        return subTotal;
     }
 
-    public void setIva10(Double iva10) {
-        this.iva10 = iva10;
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
     }
+
+    
     /**
      * Metodo que calcula el calor de los impuestos segun 
      * Excentas, Iva5 o Iva10 con el valor del precio y porcenDec
      */
     public void calcularImpuestos() {
         if (this.getProducto() != null) {
-            Double valor = this.getCantidad() * precio *(1 - procenDesc /100.0);
-            switch (this.getProducto().getIva()) {
-                case 0:
-                    this.setExcentas(valor);
-                    this.setIva5(0.0);
-                    this.setIva10(0.0);
-                    break;
-                case 5:
-                    this.setExcentas(0.0);
-                    this.setIva5(valor);
-                    this.setIva10(0.0);
-                    break;
-                case 10:
-                    this.setExcentas(0.0);
-                    this.setIva5(0.0);
-                    this.setIva10(valor);
-                    break;
-                default:
-                    break;
-            }
+            subTotal = getCantidad() * getPrecio();
+            montoIva = getCantidad() * getPrecio() * this.porcenIva / 100.0;
         }
     }
     @PrePersist

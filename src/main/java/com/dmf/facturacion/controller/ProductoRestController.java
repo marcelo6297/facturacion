@@ -5,8 +5,10 @@
  */
 package com.dmf.facturacion.controller;
 
+import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.repositorios.ProductoJPARepository;
+import com.dmf.facturacion.servicios.ProductoServices;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -15,8 +17,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,16 +38,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "/api/productos")
 public class ProductoRestController {
     
+   
+    
     @Autowired
-    ProductoJPARepository productoRepository;
+    ProductoServices service;
     
     @GetMapping
     public List<Producto> all() {
-        return productoRepository.findAll();
+        return service.productoRepo().findAll();
+    }
+    
+    @GetMapping("/search")
+    public List<Producto> search(@RequestParam("search") String search, @RequestParam("id") Long... ids){
+        
+        return service.productoRepo().buscar(search, ids);
+        
     }
     
     @PostMapping("/upload")
     @ResponseBody
+    @Transactional
     public List<Producto> handleFileUpload(@RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) throws IOException {
 
@@ -58,8 +73,37 @@ public class ProductoRestController {
             result.add(it.next())  ;
         }
         
-        productoRepository.save(result);
+        service.productoRepo().save(result);
+        service.productoRepo().updateStock();
 
         return result;
+    }
+    
+    //2019-01-24
+    @PostMapping
+    public Producto save(@RequestBody Producto p) {
+        service.productoRepo().save(p);
+        return p;
+    }
+    
+    @GetMapping(value = "{productoId}")
+    public Producto get(@PathVariable Long productoId) {
+        
+        return service.productoRepo().findOne(productoId);
+    }
+    
+    @PostMapping(value = "/delete")
+    @Transactional
+    public List<Producto> delete (@RequestBody Long[] ids) {
+        for (Long id: ids) {
+            service.productoRepo().delete(id);
+        }
+        return service.productoRepo().findAll();
+    }
+    
+    @PostMapping(value = "/updateStock")
+    @Transactional
+    public void updateStock() {
+         service.productoRepo().updateStock();
     }
 }

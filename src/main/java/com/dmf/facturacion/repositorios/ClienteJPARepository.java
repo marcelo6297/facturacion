@@ -27,5 +27,5 @@ public interface ClienteJPARepository extends JpaRepository<Cliente, Long>{
     
     @Query("From Cliente c WHERE c.nombre LIKE %:nombre% OR c.apellido LIKE %:apellido%")
     public List<Cliente> searchAll(@Param("nombre") String nombre, @Param("apellido") String apellido);
-  
+    public Cliente findOneByRuc(String ruc);
 }

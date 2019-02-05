@@ -107,10 +107,9 @@ public class ProductoPedido implements Serializable {
         this.producto = producto;
         if (producto.getNombre()  == null) {return ;}
         this.nombreProducto = producto.getNombre();
-        if (producto.getPrecio()== null) {return ;}
-        this.precio = producto.getPrecio();
-        if (producto.getIva()== null) {return ;}
-        this.iva = producto.getIva();
+       
+        if (producto.getPorcenIva()== null) {return ;}
+        this.iva = producto.getPorcenIva();
     }
     
     @Column(name="sub_total", nullable=false)
