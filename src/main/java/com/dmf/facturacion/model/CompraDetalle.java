@@ -7,14 +7,12 @@ package com.dmf.facturacion.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 /**
@@ -46,29 +44,15 @@ public class CompraDetalle implements Serializable {
     private Double precioCompra;
     private Integer porcenGan;
     private Double precioVenta;
-    private Integer iva;
+    private Integer porcenIva;
     private Double cantidad;
-    private Double subTotalIva;
+    private Double montoIva;
     private Double subTotal;
 
     public CompraDetalle() {
     }
 
-    public CompraDetalle(Long id, Compra compra, Producto producto, String codigo, String nombre, String descripcion, Double precioCompra, Integer procenGan, Double precioVenta, Integer iva, Double cantidad, Double subTotalIva, Double subTotal) {
-        this.id = id;
-        this.compra = compra;
-        this.producto = producto;
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precioCompra = precioCompra;
-        this.porcenGan = procenGan;
-        this.precioVenta = precioVenta;
-        this.iva = iva;
-        this.cantidad = cantidad;
-        this.subTotalIva = subTotalIva;
-        this.subTotal = subTotal;
-    }
+    
 
     public Compra getCompra() {
         return compra;
@@ -87,7 +71,7 @@ public class CompraDetalle implements Serializable {
         this.nombre = producto.getNombre();
         this.codigo = producto.getCodigo();
         this.descripcion = producto.getDescripcion();
-        this.iva = producto.getIva();
+        this.porcenIva = producto.getPorcenIva();
     }
 
     public String getCodigo() {
@@ -138,13 +122,6 @@ public class CompraDetalle implements Serializable {
         this.precioVenta = precioVenta;
     }
 
-    public Integer getIva() {
-        return iva;
-    }
-
-    public void setIva(Integer iva) {
-        this.iva = iva;
-    }
 
     public Double getCantidad() {
         return cantidad;
@@ -154,21 +131,9 @@ public class CompraDetalle implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Double getSubTotalIva() {
-        return subTotalIva;
-    }
+   
 
-    public void setSubTotalIva(Double subTotalIva) {
-        this.subTotalIva = subTotalIva;
-    }
-
-    public Double getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(Double subTotal) {
-        this.subTotal = subTotal;
-    }
+   
 
     public Long getId() {
         return id;
@@ -182,6 +147,7 @@ public class CompraDetalle implements Serializable {
      * 
      */
     public void calclularTotal() throws IllegalArgumentException{
+        System.out.println("CompraDetalle.calcularTotales");
         if (porcenGan == null && precioVenta == null){
             throw new IllegalArgumentException("Porentaje ganancia y precio venta no pueden ser nulos");
         }
@@ -197,12 +163,60 @@ public class CompraDetalle implements Serializable {
             setPrecioVenta(pv);
         }
         
+        subTotal = getCantidad() * getPrecioCompra() ;
+        montoIva = getCantidad() * getPrecioCompra() * porcenIva / 100.0;
+         
+        
+//        comentado el 2019-02-02
+//        switch (getIva()) {
+//                case 0:
+//                    this.setExcentas(getCantidad() * getPrecioCompra());
+//                    this.setIva5(0.0);
+//                    this.setIva10(0.0);
+//                    break;
+//                case 5:
+//                    this.setExcentas(0.0);
+//                    this.setIva5(valor);
+//                    this.setIva10(0.0);
+//                    break;
+//                case 10:
+//                    this.setExcentas(0.0);
+//                    this.setIva5(0.0);
+//                    this.setIva10(valor);
+//                    break;
+//                default:
+//                    break;
+//            }
         
         
-        Double subTotalIva = getCantidad() * getPrecioCompra() * getIva() / 100.0;
-        setSubTotalIva(subTotalIva);
-        
-        Double subTotal = getCantidad() * getPrecioCompra() + getSubTotalIva();
-        setSubTotal(subTotal);
     }
+
+    
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Integer getPorcenIva() {
+        return porcenIva;
+    }
+
+    public void setPorcenIva(Integer porcenIva) {
+        this.porcenIva = porcenIva;
+    }
+
+    public Double getMontoIva() {
+        return montoIva;
+    }
+
+    public void setMontoIva(Double montoIva) {
+        this.montoIva = montoIva;
+    }
+    
+    
+    
+    
 }

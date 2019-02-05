@@ -5,7 +5,6 @@
  */
 package com.dmf.facturacion.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -16,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 /**
  * Representa una compra hecha a un proveedor, en principio no existe la tabla 
@@ -26,9 +26,47 @@ import javax.persistence.PrePersist;
 public class Compra implements Serializable{
     Long                id;
     String              proveedor;
-    Date                fechaCompra;
-    Double              totalCompra = 0.0;    
-    Set<CompraDetalle>  compraDetalles;
+    Date                fechaCompra = new Date();
+    
+    Double              totalExcentas = 0.0;    
+    Double              totalIva5 = 0.0;    
+    Double              totalIva10 = 0.0;    
+    Double              totalGeneral = 0.0;
+         
+    Set<CompraDetalle>  compraDetalles;    
+
+    public Double getTotalGeneral() {
+        return totalGeneral;
+    }
+
+    public void setTotalGeneral(Double totalGeneral) {
+        this.totalGeneral = totalGeneral;
+    }
+
+    public Double getTotalExcentas() {
+        return totalExcentas;
+    }
+
+    public void setTotalExcentas(Double totalExcentas) {
+        this.totalExcentas = totalExcentas;
+    }
+
+    public Double getTotalIva5() {
+        return totalIva5;
+    }
+
+    public void setTotalIva5(Double totalIva5) {
+        this.totalIva5 = totalIva5;
+    }
+
+    public Double getTotalIva10() {
+        return totalIva10;
+    }
+
+    public void setTotalIva10(Double totalIva10) {
+        this.totalIva10 = totalIva10;
+    }
+    
 
     public Compra() {
     }
@@ -37,7 +75,7 @@ public class Compra implements Serializable{
         this.id = id;
         this.proveedor = proveedor;
         this.fechaCompra = fechaCompra;
-        this.totalCompra = totalCompra;
+       
     }
 
     
@@ -68,14 +106,8 @@ public class Compra implements Serializable{
     public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
-
-    public Double getTotalCompra() {
-        return totalCompra;
-    }
-
-    public void setTotalCompra(Double totalCompra) {
-        this.totalCompra = totalCompra;
-    }
+    
+   
     
     @OneToMany(fetch= FetchType.LAZY, mappedBy="compra")
     public Set<CompraDetalle> getCompraDetalles() {
@@ -86,10 +118,19 @@ public class Compra implements Serializable{
         this.compraDetalles = compraDetalles;
     }
 
-    @PrePersist
-    public void calcularTotal() {
+    
+    public void calcularTotales() {
         for(CompraDetalle cd : this.compraDetalles) {
-            totalCompra += cd.getSubTotal();
+            switch(cd.getPorcenIva() ) {
+                case 0: totalExcentas += cd.getSubTotal();
+                        break;
+                case 5: totalIva5 += cd.getSubTotal()+cd.getMontoIva();
+                        break;
+                case 10: totalIva10 += cd.getSubTotal()+cd.getMontoIva();
+                        break;
+            
+            }
         }
+        totalGeneral = totalExcentas+totalIva5+totalIva10;
     }
 }

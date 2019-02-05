@@ -5,6 +5,7 @@
  */
 package com.dmf.facturacion.controller;
 
+import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.Compra;
 import com.dmf.facturacion.model.CompraDetalle;
 import com.dmf.facturacion.servicios.ProductoServices;
@@ -24,12 +25,17 @@ import org.springframework.web.bind.annotation.RestController;
  * @author marcelo
  */
 @RestController
-@RequestMapping(value = "api/compra")
+@RequestMapping(value = "api/compras")
 @Transactional
 public class CompraRest {
     
     @Autowired
     ProductoServices service;
+    
+    @GetMapping
+    public List<Compra> getAll(){
+        return service.compraRepo().findAll();
+    }        
     
     @GetMapping(value = "{compraId}")
     public Compra get(@PathVariable Long compraId){
@@ -38,16 +44,26 @@ public class CompraRest {
     
     
     @PostMapping(value = "/save")
-       
+    @Transactional   
     public Compra save(@RequestBody Compra c,   BindingResult result) {
         if (result.hasErrors()) {
             return c;
         }
-        
-        service.saveCompra(c, c.getCompraDetalles());
+        service.saveCompra(c);
         
         return c;
 //        return "redirect:/api/cliente";
+    }
+    
+     @PostMapping(value = "/delete")
+    @Transactional
+    public Boolean deleteAll(@RequestBody Long[] ids) {
+        
+        for (Long id : ids) 
+            service.compraRepo().delete(id);
+        
+        return Boolean.TRUE;
+
     }
     
 }
