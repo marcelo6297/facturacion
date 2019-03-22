@@ -5,6 +5,7 @@
  */
 package com.dmf.facturacion.servicios;
 
+import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.model.Venta;
 import com.dmf.facturacion.model.VentaDetalle;
@@ -30,7 +31,7 @@ public class ProductoServiceTest {
         
         Integer[] iva = new Integer[] {0,5,10,10}; 
         
-        for (int i = 0 ;i<4 ; i++){
+        for (int i = 0 ;i<1000 ; i++){
         
             Producto p = new Producto();
             p.setCodigo("A00"+i);
@@ -39,12 +40,19 @@ public class ProductoServiceTest {
             p.setPrecioCompra(100.0);
             p.setPorcenGan(10);
             
-            p.setPorcenIva(iva[i]);
+            p.setPorcenIva(iva[i%4]);
             p.setStockInicial(10.0);
             Double pv = (1 + (p.getPorcenGan()/100.0)) * p.getPrecioCompra();
             p.setPrecioVenta(pv);
             p.setActivo(Boolean.TRUE);
-            productoServices.saveProducto(p);
+            try {
+                productoServices.saveProducto(p);
+            
+            }
+            catch (Exception e) {
+                System.out.println("error: en guardar");
+                System.out.println(e.toString());
+            }
         
         }
     
@@ -57,7 +65,8 @@ public class ProductoServiceTest {
         p.setPrecioVenta(15.0);
         p.setPorcenIva(10);
         Venta v = new Venta();
-        v.setCliente("Test");
+       Cliente c = new Cliente();
+        v.setCliente(c);
         
         VentaDetalle vd = new VentaDetalle();
         vd.setVenta(v);
@@ -67,7 +76,7 @@ public class ProductoServiceTest {
         vd.setCantidad(30.0);
         vd.setPrecio(p.getPrecioVenta());
         
-        vd.calcularImpuestos();
+        vd.calcularTotal();
         
        
         assertEquals(10,vd.getPorcenIva(), 0.01);
@@ -75,14 +84,14 @@ public class ProductoServiceTest {
         
         p.setPorcenIva(5);
          vd.setProducto(p);
-        vd.calcularImpuestos();
+        vd.calcularTotal();
         
         assertEquals(405.0,vd.getMontoIva(), 0.01);
         
         
         p.setPorcenIva(0);
         vd.setProducto(p);
-        vd.calcularImpuestos();
+        vd.calcularTotal();
         assertEquals(0.0,vd.getMontoIva(), 0.01);
         
     }

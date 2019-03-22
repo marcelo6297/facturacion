@@ -5,14 +5,16 @@
  */
 package com.dmf.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 /**
@@ -29,9 +31,11 @@ public class VentaDetalle implements Serializable{
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long                    id;
     
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="venta_id")
     private Venta                   venta;
+    
     @ManyToOne
     @JoinColumn(name="producto_id")
     private Producto                producto;
@@ -40,12 +44,17 @@ public class VentaDetalle implements Serializable{
     private String                  nombre;
     private String                  descripcion;
     
+    @Enumerated(EnumType.STRING)
+    private EstadoFact              estado ;
     
-    private Double                  cantidad    =0.0;
-    private Double                  precio      =0.0;
-    private Integer                 porcenDesc  =0;
-    private Integer                 porcenIva  =0;
+    
+    private Double                  cantidad       =0.0;
+    private Double                  precio         =0.0;
+    private Integer                 porcenDesc     =0;
+    private Integer                 porcenIva      =0;
     private Double                  montoIva       =0.0;
+    private Double                  montoDesc       =0.0;
+    //Monto sin IVA
     private Double                  subTotal       =0.0;
 
     public VentaDetalle() {
@@ -159,17 +168,34 @@ public class VentaDetalle implements Serializable{
 
     
     /**
-     * Metodo que calcula el calor de los impuestos segun 
-     * Excentas, Iva5 o Iva10 con el valor del precio y porcenDec
+     * 
      */
-    public void calcularImpuestos() {
-        if (this.getProducto() != null) {
-            subTotal = getCantidad() * getPrecio();
-            montoIva = getCantidad() * getPrecio() * this.porcenIva / 100.0;
+public void calcularTotal() {
+       if (porcenDesc != null) {
+            montoDesc = cantidad * precio * porcenDesc / 100;
+            subTotal = cantidad * precio - montoDesc;
+        } else {
+            subTotal = cantidad * precio;
         }
+        montoIva = subTotal * porcenIva / 100;
     }
-    @PrePersist
-    public void antesInsert() {
-        calcularImpuestos();
+    
+
+    public Double getMontoDesc() {
+        return montoDesc;
     }
+
+    public void setMontoDesc(Double montoDesc) {
+        this.montoDesc = montoDesc;
+    }
+    
+    public EstadoFact getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoFact estado) {
+        this.estado = estado;
+    }
+    
+    
 }

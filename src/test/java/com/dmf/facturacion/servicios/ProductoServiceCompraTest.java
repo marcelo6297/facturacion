@@ -35,7 +35,7 @@ public class ProductoServiceCompraTest {
         
         
         Compra c = new Compra();
-        c.setProveedor("Test");
+        c.setProveedor("TEST");
         c.setFechaCompra(new Date());
         
         List<CompraDetalle> detalles = new ArrayList<>();

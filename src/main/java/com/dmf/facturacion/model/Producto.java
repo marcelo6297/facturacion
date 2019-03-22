@@ -43,6 +43,7 @@ public class Producto implements Serializable {
     private Integer                 porcenGan      = 35;
     private Double                  precioVenta    = 0.0;
     private Integer                 porcenIva            = 0;
+    private Integer                 porcenDesc            = 0;
     
     private Double                  stockInicial   = 0.0;
     private Double                  stockMinimo    = 0.0;
@@ -50,6 +51,9 @@ public class Producto implements Serializable {
     private Double                  totalIngreso   = 0.0;
     private Double                  totalSalida    = 0.0;
     private Double                  totalStock     = 0.0;
+    
+    @Enumerated(EnumType.STRING)
+    private EstadoStock             estadoStock    = EstadoStock.Normal;
     
     
        
@@ -193,12 +197,27 @@ public class Producto implements Serializable {
         this.activo = activo;
     }
 
-    @PrePersist
-    public void calcularStock(){
-        System.out.println("Producto PrePersit");
+    public Integer getPorcenDesc() {
+        return porcenDesc;
     }
+
+    public void setPorcenDesc(Integer porcenDesc) {
+        this.porcenDesc = porcenDesc;
+    }
+
+    public EstadoStock getEstadoStock() {
+        return estadoStock;
+    }
+
+    public void setEstadoStock(EstadoStock estadoStock) {
+        this.estadoStock = estadoStock;
+    }
+    
+    
+
 
    
     
             
 }
+

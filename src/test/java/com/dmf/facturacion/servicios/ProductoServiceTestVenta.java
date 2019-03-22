@@ -5,13 +5,15 @@
  */
 package com.dmf.facturacion.servicios;
 
-import com.dmf.facturacion.model.CompraDetalle;
+import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.model.Venta;
 import com.dmf.facturacion.model.VentaDetalle;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,8 @@ public class ProductoServiceTestVenta {
     public void guardarVentaConProducto(){
         
         Venta v = new Venta();
-        v.setCliente("Test");
+        Cliente c = new Cliente();
+        v.setCliente(c);
         v.setFechaVenta(new Date());
         v.setCreadoEl(new Date());
         
@@ -56,7 +59,9 @@ public class ProductoServiceTestVenta {
             detalles.add(vd);
         }
         
-        productoServices.saveVenta(v, detalles);
+        Set<VentaDetalle> det = new HashSet<>(detalles);
+        v.setVentaDetalles(det);
+        productoServices.saveVenta(v);
         productos = productoServices.productoRepo().findAll();
         for (Producto p : productos) {
             System.out.println("Stock p:" +p.getTotalStock());

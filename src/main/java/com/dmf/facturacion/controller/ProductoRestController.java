@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,13 +46,24 @@ public class ProductoRestController {
     ProductoServices service;
     
     @GetMapping
-    public List<Producto> all() {
-        return service.productoRepo().findAll();
+    public Iterable<Producto> all(Pageable pageReq) {
+//        String headerKey = "x-record-count";
+//        Long count = service.productoRepo().count();
+//        String headerValue = (count.toString());
+//        response.setHeader(headerKey, headerValue);
+        //como paginar una respuesta.
+        
+        return service.productoRepo().findAll(pageReq);
+        
+//        return service.productoRepo().findAll();
     }
     
     @GetMapping("/search")
-    public List<Producto> search(@RequestParam("search") String search, @RequestParam("id") Long... ids){
+    public List<Producto> search(@RequestParam("search") String search, @RequestParam(name="ids", required = false) Long... ids){
         
+        if (ids == null) {
+            return service.productoRepo().buscar(search);
+        }
         return service.productoRepo().buscar(search, ids);
         
     }

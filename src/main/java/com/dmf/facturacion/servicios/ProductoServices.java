@@ -6,12 +6,15 @@
 package com.dmf.facturacion.servicios;
 
 import com.dmf.facturacion.model.Compra;
-import com.dmf.facturacion.model.CompraDetalle;
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.model.Venta;
-import com.dmf.facturacion.model.VentaDetalle;
 import com.dmf.facturacion.repositorios.CompraJpaRepo;
 import com.dmf.facturacion.repositorios.ProductoJPARepository;
+import com.dmf.facturacion.repositorios.VentaDetalleJpaRepo;
+import com.dmf.facturacion.repositorios.VentaJpaRepo;
+import java.util.List;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -35,9 +38,23 @@ public interface ProductoServices {
     
     public ProductoJPARepository productoRepo();
     
+    public VentaJpaRepo ventaJpaRepo();
+    
+    public VentaDetalleJpaRepo ventaDetJpaRepo();
+    
     public CompraJpaRepo compraRepo();
     
-    public void saveVenta(Venta venta, Iterable<VentaDetalle> detalles) throws NullPointerException, IllegalArgumentException;
+    public void saveVenta(Venta venta) throws NullPointerException, IllegalArgumentException;
     
-    public void calcularTotales(Compra c);
+    public void calcularTotalCompra(Compra c);
+    
+    public void calcularTotalVenta(Venta v);
+    
+    public void clearDetallesVentas(Long ventaId);
+    
+    public void updateStock();
+    
+    public void anularVentas(Long ... ids);
+    
+//    public List<Producto> filtrar(Example<Producto> p, Pageable pgbl);
 }

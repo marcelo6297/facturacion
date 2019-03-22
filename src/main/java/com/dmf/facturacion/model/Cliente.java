@@ -62,8 +62,6 @@ public class Cliente implements Serializable {
     private Date            createdOn = new Date();
     
     
-    private Set<Pedido> pedidos;
-    
     @Temporal(TemporalType.DATE)
     @Column(name="created_on", updatable=false, nullable=false)
     public Date getCreatedOn() {
@@ -74,15 +72,7 @@ public class Cliente implements Serializable {
         this.createdOn = created_on;
     }
     
-    @JsonIgnore
-    @ManyToMany(fetch= FetchType.LAZY, mappedBy="cliente")
-    public Set<Pedido> getPedidos() {
-        return pedidos;
-    }
 
-    public void setPedidos(Set<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
     
 
     public Cliente() {
@@ -159,25 +149,7 @@ public class Cliente implements Serializable {
         this.telefono = telefono;
     }
 
-    public Cliente(Long id, String nombre, String apellido, String ruc, String telefono, String direccion1, String direccion2, TipoCliente tipo, Boolean activo, Date fechaNacimiento, Set<Pedido> pedidos) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.ruc = ruc;
-        this.telefono = telefono;
-        this.direccion1 = direccion1;
-        this.direccion2 = direccion2;
-        this.tipo = tipo;
-        this.activo = activo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.pedidos = pedidos;
-    }
-    
-   
-    
-    
-
-    
+ 
  
 }
 

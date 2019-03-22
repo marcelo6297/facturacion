@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "api/compras")
-@Transactional
 public class CompraRest {
     
     @Autowired
@@ -44,12 +43,13 @@ public class CompraRest {
     
     
     @PostMapping(value = "/save")
-    @Transactional   
+    
     public Compra save(@RequestBody Compra c,   BindingResult result) {
         if (result.hasErrors()) {
             return c;
         }
         service.saveCompra(c);
+        service.updateStock();
         
         return c;
 //        return "redirect:/api/cliente";

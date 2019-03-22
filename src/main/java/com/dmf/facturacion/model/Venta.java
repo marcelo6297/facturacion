@@ -7,10 +7,19 @@ package com.dmf.facturacion.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -23,18 +32,37 @@ public class Venta implements Serializable {
     private Long id;
     
     private String condicionVenta; //Credito, Contado
-    private String cliente;
+    
+    @ManyToOne
+    @JoinColumn(name="cliente_id")
+    private Cliente cliente;
+    
     private String vendedor;
-    private String tipoDocumento; //Factura, Presupuesto, Recibo, Remision
-    private String numeroDocumento;
+    
+    @Enumerated(EnumType.STRING)
+    private TipoDocumento tipoDocumento; //Factura, Presupuesto, Recibo, Remision
+    
+    @Enumerated(EnumType.STRING)
+    private EstadoFact estado;        //Pendiente, Pagado, Anulado,
+    
+    private String numeroDocumento;  
     private Double totalExentas;
     private Double totalIva5;
     private Double totalIva10;
-    private Double totalIva;
-    private Double total;
+    private Double totalGeneral;
+    private Double totalDesc;
+    
+    @Temporal(TemporalType.DATE)
     private Date   fechaVenta;
+    
+    @Temporal(TemporalType.DATE)
     private Date   creadoEl;
+    
+    @Temporal(TemporalType.DATE)
     private Date   actualizadoEl;
+    
+    @OneToMany(fetch= FetchType.LAZY, mappedBy="venta")
+    Set<VentaDetalle>  ventaDetalles;
 
     public Long getId() {
         return id;
@@ -47,22 +75,6 @@ public class Venta implements Serializable {
     public Venta() {
     }
 
-    public Venta(Long id, String condicionVenta, String cliente, String vendedor, String tipoDocumento, String numeroDocumento, Double totalExentas, Double totalIva5, Double totalIva10, Double totalIva, Double total, Date fechaVenta, Date creadoEl, Date actualizadoEl) {
-        this.id = id;
-        this.condicionVenta = condicionVenta;
-        this.cliente = cliente;
-        this.vendedor = vendedor;
-        this.tipoDocumento = tipoDocumento;
-        this.numeroDocumento = numeroDocumento;
-        this.totalExentas = totalExentas;
-        this.totalIva5 = totalIva5;
-        this.totalIva10 = totalIva10;
-        this.totalIva = totalIva;
-        this.total = total;
-        this.fechaVenta = fechaVenta;
-        this.creadoEl = creadoEl;
-        this.actualizadoEl = actualizadoEl;
-    }
 
     public String getCondicionVenta() {
         return condicionVenta;
@@ -72,11 +84,11 @@ public class Venta implements Serializable {
         this.condicionVenta = condicionVenta;
     }
 
-    public String getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(String cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
@@ -88,13 +100,6 @@ public class Venta implements Serializable {
         this.vendedor = vendedor;
     }
 
-    public String getTipoDocumento() {
-        return tipoDocumento;
-    }
-
-    public void setTipoDocumento(String tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
-    }
 
     public String getNumeroDocumento() {
         return numeroDocumento;
@@ -128,20 +133,14 @@ public class Venta implements Serializable {
         this.totalIva10 = totalIva10;
     }
 
-    public Double getTotalIva() {
-        return totalIva;
+    
+
+    public Double getTotalGeneral() {
+        return totalGeneral;
     }
 
-    public void setTotalIva(Double totalIva) {
-        this.totalIva = totalIva;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
+    public void setTotalGeneral(Double total) {
+        this.totalGeneral = total;
     }
 
     public Date getFechaVenta() {
@@ -167,6 +166,40 @@ public class Venta implements Serializable {
     public void setActualizadoEl(Date actualizadoEl) {
         this.actualizadoEl = actualizadoEl;
     }
+
+    public Double getTotalDesc() {
+        return totalDesc;
+    }
+
+    public void setTotalDesc(Double totalDesc) {
+        this.totalDesc = totalDesc;
+    }
+
+    public Set<VentaDetalle> getVentaDetalles() {
+        return ventaDetalles;
+    }
+
+    public void setVentaDetalles(Set<VentaDetalle> ventaDetalles) {
+        this.ventaDetalles = ventaDetalles;
+    }
+
+    public TipoDocumento getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(TipoDocumento tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public EstadoFact getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoFact estado) {
+        this.estado = estado;
+    }
+
+    
     
     
 }

@@ -28,7 +28,7 @@ public class Compra implements Serializable{
     String              proveedor;
     Date                fechaCompra = new Date();
     
-    Double              totalExcentas = 0.0;    
+    Double              totalExentas = 0.0;    
     Double              totalIva5 = 0.0;    
     Double              totalIva10 = 0.0;    
     Double              totalGeneral = 0.0;
@@ -43,12 +43,12 @@ public class Compra implements Serializable{
         this.totalGeneral = totalGeneral;
     }
 
-    public Double getTotalExcentas() {
-        return totalExcentas;
+    public Double getTotalExentas() {
+        return totalExentas;
     }
 
-    public void setTotalExcentas(Double totalExcentas) {
-        this.totalExcentas = totalExcentas;
+    public void setTotalExentas(Double totalExentas) {
+        this.totalExentas = totalExentas;
     }
 
     public Double getTotalIva5() {
@@ -122,7 +122,7 @@ public class Compra implements Serializable{
     public void calcularTotales() {
         for(CompraDetalle cd : this.compraDetalles) {
             switch(cd.getPorcenIva() ) {
-                case 0: totalExcentas += cd.getSubTotal();
+                case 0: totalExentas += cd.getSubTotal();
                         break;
                 case 5: totalIva5 += cd.getSubTotal()+cd.getMontoIva();
                         break;
@@ -131,6 +131,6 @@ public class Compra implements Serializable{
             
             }
         }
-        totalGeneral = totalExcentas+totalIva5+totalIva10;
+        totalGeneral = totalExentas+totalIva5+totalIva10;
     }
 }
