@@ -5,10 +5,13 @@
  */
 package com.dmf.facturacion.servicios;
 
+import com.dmf.facturacion.filtros.ProductoFilter;
 import com.dmf.facturacion.model.Compra;
 import com.dmf.facturacion.model.CompraDetalle;
 import com.dmf.facturacion.model.EstadoFact;
+import com.dmf.facturacion.model.EstadoStock;
 import com.dmf.facturacion.model.Producto;
+import com.dmf.facturacion.model.QProducto;
 import com.dmf.facturacion.model.Venta;
 import com.dmf.facturacion.model.VentaDetalle;
 import com.dmf.facturacion.repositorios.CompraDetalleJpaRepo;
@@ -16,11 +19,9 @@ import com.dmf.facturacion.repositorios.CompraJpaRepo;
 import com.dmf.facturacion.repositorios.ProductoJPARepository;
 import com.dmf.facturacion.repositorios.VentaDetalleJpaRepo;
 import com.dmf.facturacion.repositorios.VentaJpaRepo;
-import java.util.ArrayList;
-import java.util.List;
+import com.querydsl.core.BooleanBuilder;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,10 +79,6 @@ public class ProductoServicesImpl implements ProductoServices{
         this.ventaDetalleRepo = ventaDetalleRepo;
     }
 
-    @Override
-    public void saveProducto(Producto producto) throws NullPointerException {
-        productoRepo.save(producto);
-    }
 
     @Override
     public Producto findById(Long id) {
@@ -196,10 +193,48 @@ public class ProductoServicesImpl implements ProductoServices{
         ventaDetJpaRepo().updateVenta(EstadoFact.Anulado.name(), ids);
     }
 
-//    @Override
-    public List<Producto> filtrar(Example<Producto> p, Pageable pgbl) {
+    @Override
+    public Iterable<Producto> filter(ProductoFilter filtro, Pageable pgbl) {
+        
+        if (filtro == null) {
+           return productoRepo.findAll(pgbl);
+        }
+    
+        QProducto qp = QProducto.producto;
+        BooleanBuilder builder =  new BooleanBuilder();
+        
+       
+        if (filtro.getEstaActivo() != null ) {
+            builder.and(qp.activo.eq(filtro.getEstaActivo()));
+        }
+        if (filtro.getNombre() != null && !filtro.getNombre().isEmpty()) {
+            builder.and(qp.nombre.containsIgnoreCase(filtro.getNombre()));
+             
+        }
+        if (filtro.getCodigo() != null && !filtro.getCodigo().isEmpty()) {
+            builder.and(qp.codigo.containsIgnoreCase(filtro.getCodigo()));
+        }
+        
+        if (filtro.getEstadoStock()!= null && !filtro.getEstadoStock().isEmpty()) {
+            EstadoStock es = EstadoStock.valueOf(filtro.getEstadoStock());
+            builder.and(qp.estadoStock.eq(es));
+        }
+       
+        if (filtro.getPrecioCompra()!= null && filtro.getPrecioCompra().isValid()) {
+            builder.and(qp.precioCompra.between(filtro.getPrecioCompra().getMin(),
+                    filtro.getPrecioCompra().getMax()));
+        }
 
-        return new ArrayList<>();
+        if (filtro.getPrecioVenta()!= null && filtro.getPrecioVenta().isValid()) {
+            builder.and(qp.precioVenta.between(filtro.getPrecioVenta().getMin(),
+                    filtro.getPrecioVenta().getMax()));
+        }
+        if (filtro.getTotalStock()!= null && filtro.getTotalStock().isValid()) {
+             builder.and(qp.totalStock.between(filtro.getTotalStock().getMin(),
+                     filtro.getTotalStock().getMax()));
+        }       
+
+        return productoRepo.findAll(builder.getValue(), pgbl);
     }
     
 }

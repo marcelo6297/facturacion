@@ -5,6 +5,7 @@
  */
 package com.dmf.facturacion.servicios;
 
+import com.dmf.facturacion.filtros.ProductoFilter;
 import com.dmf.facturacion.model.Compra;
 import com.dmf.facturacion.model.Producto;
 import com.dmf.facturacion.model.Venta;
@@ -22,8 +23,7 @@ import org.springframework.data.domain.Pageable;
  */
 public interface ProductoServices {
     
-    public void saveProducto(Producto producto) throws NullPointerException;
-    
+      
     /**
      * Se deve setear el precio segun una estrategia de prioridad, si no tiene
      * seteado precio de venta calcularlo, si tiene ambos valores(precioVenta y procentGan)
@@ -56,5 +56,5 @@ public interface ProductoServices {
     
     public void anularVentas(Long ... ids);
     
-//    public List<Producto> filtrar(Example<Producto> p, Pageable pgbl);
+    public Iterable<Producto> filter(ProductoFilter pf, Pageable pgbl);
 }

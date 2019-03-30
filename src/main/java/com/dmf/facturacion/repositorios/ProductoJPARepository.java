@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @author marcelo
  */
 @Component
-public interface ProductoJPARepository extends JpaRepository<Producto, Long>, QueryDslPredicateExecutor {
+public interface ProductoJPARepository extends JpaRepository<Producto, Long>, QueryDslPredicateExecutor<Producto> {
     
     @Modifying
     @Query(value = "Update producto as p "
@@ -29,8 +29,8 @@ public interface ProductoJPARepository extends JpaRepository<Producto, Long>, Qu
             + "FROM venta_detalle vd WHERE vd.producto_id = p.id AND vd.estado != 'Anulado'),  "
             + "p.total_stock = p.stock_inicial + p.total_ingreso - p.total_salida , "
             + "p.estado_stock = case \n"
-            + "WHEN p.total_stock <= p.stock_pre_orden AND p.total_stock > p.stock_minimo  THEN 'Minimo'\n"
-            + "WHEN p.total_stock <= p.stock_minimo  THEN 'Critico'\n"
+            + "WHEN p.total_stock <= p.stock_pre_orden AND p.total_stock >= p.stock_minimo  THEN 'Minimo'\n"
+            + "WHEN p.total_stock < p.stock_minimo  THEN 'Critico'\n"
             + "else 'Normal'\n"
             + "END", 
             nativeQuery = true)

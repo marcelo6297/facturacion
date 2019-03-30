@@ -213,7 +213,33 @@ public class Producto implements Serializable {
         this.estadoStock = estadoStock;
     }
     
+    @PrePersist
+    public void setStockInicial(){
+       totalStock = stockInicial;
+       if (stockInicial <= stockPreOrden && stockInicial >= stockMinimo) {
+           estadoStock = EstadoStock.Minimo;
+       }
+       else if ( stockInicial < stockMinimo ) {
+           estadoStock = EstadoStock.Critico;
+       }
+       else {
+           estadoStock = EstadoStock.Normal;
+       }
+    }
     
+    @PreUpdate 
+    public void setStockInicialOnUpdate(){
+       totalStock = stockInicial + totalIngreso - totalSalida;
+       if (stockInicial <= stockPreOrden && stockInicial >= stockMinimo) {
+           estadoStock = EstadoStock.Minimo;
+       }
+       else if ( stockInicial < stockMinimo ) {
+           estadoStock = EstadoStock.Critico;
+       }
+       else {
+           estadoStock = EstadoStock.Normal;
+       }
+    }
 
 
    
