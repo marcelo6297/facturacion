@@ -14,13 +14,14 @@ import com.dmf.facturacion.model.Cliente;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
 //@PersistenceUnit(name = "partediarioPU")
 @Repository
-public interface ClienteJPARepository extends JpaRepository<Cliente, Long>{
+public interface ClienteJPARepository extends JpaRepository<Cliente, Long>, QueryDslPredicateExecutor<Cliente>{
     
 //    @Query("From Tipo t")
 //    public List<Tipo> findTipoAll();

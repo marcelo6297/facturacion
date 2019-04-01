@@ -5,15 +5,16 @@
  */
 package com.dmf.facturacion.controller;
 
+import com.dmf.facturacion.filtros.ClienteFilter;
 import com.dmf.facturacion.model.Cliente;
 import com.dmf.facturacion.model.TipoCliente;
 import com.dmf.facturacion.repositorios.ClienteJPARepository;
+import com.dmf.facturacion.servicios.ClienteServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,17 +43,20 @@ public class ClienteRestController {
 
     @Autowired
     ClienteJPARepository clienteRepository;
+    
+    @Autowired
+    ClienteServices _srvc;
 
     @GetMapping(value = "{clienteId}")
     public Cliente get(@PathVariable Long clienteId) {
         System.out.println("Retornando un solo cliente" + clienteId + "\r");
-        return clienteRepository.findOne(clienteId);
+        return _srvc.getJpaRepo().findOne(clienteId);
     }
 
     @GetMapping
-    public List<Cliente> all(ModelMap model) {
+    public Iterable<Cliente> all(Pageable pgbl) {
         System.out.println("Listando los usuarios\r");
-        return clienteRepository.findAll();
+        return clienteRepository.findAll(pgbl);
     }
 
     /**
@@ -134,6 +138,11 @@ public class ClienteRestController {
     @GetMapping(value = "/ruc")
     public Boolean ruc(@RequestParam("ruc") String ruc) {
         return clienteRepository.findOneByRuc(ruc) instanceof Cliente ;
+    }
+    
+    @PostMapping(value = "filter")
+    public Iterable<Cliente> filtrar(@RequestBody ClienteFilter filtro, Pageable pgbl){
+        return _srvc.filter(filtro, pgbl);
     }
     
 }
