@@ -6,11 +6,17 @@
 package com.dmf.facturacion.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -19,14 +25,29 @@ import javax.persistence.Id;
 @Entity
 public class User implements Serializable{
     
-    
-    private Long id;
-    private String email;
-    private String password;
-    private int enabled;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(unique = true)
+    @NotNull
+    private String email;
+    @Column
+    private String nombre;
+    @Column
+    private String apellido;
+    @Column
+    private String direccion;
+    @Column
+    @NotNull
+    private String password;
+    @Column
+    private int enabled;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+   
+    private Set<UserRoles> roles = new HashSet<>();;
+    
+    
     public Long getId() {
         return id;
     }
@@ -35,7 +56,7 @@ public class User implements Serializable{
         this.id = id;
     }
     
-    @Column(unique = true)
+    
     public String getEmail() {
         return email;
     }
@@ -44,7 +65,7 @@ public class User implements Serializable{
         this.email = email;
     }
     
-    @Column
+   
     public String getPassword() {
         return password;
     }
@@ -56,7 +77,7 @@ public class User implements Serializable{
         this.password = password;
     }
     
-    @Column
+  
     public int getEnabled() {
         return enabled;
     }
@@ -66,6 +87,49 @@ public class User implements Serializable{
     }
 
     public User() {
+    }
+
+    public Set<UserRoles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<UserRoles> roles) {
+        this.roles = roles;
+    }
+
+    public User(Long id, String email, String nombre, String apellido, String direccion, String password, int enabled, Set<UserRoles> roles) {
+        this.id = id;
+        this.email = email;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.direccion = direccion;
+        this.password = password;
+        this.enabled = enabled;
+        this.roles = roles;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
     
     

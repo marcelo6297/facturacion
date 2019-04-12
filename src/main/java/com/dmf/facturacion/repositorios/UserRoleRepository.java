@@ -9,6 +9,7 @@ import com.dmf.facturacion.model.UserRoles;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,6 +20,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRoleRepository extends CrudRepository<UserRoles, Long> {
     
     //Encontrar un rol en base a un nombre de usuario
-    @Query("select a.role from UserRoles a, User  b where b.email =? and a.userId = b.id")
-    public List<String> getRolesByUsername(String email);
+    @Query("select a.tipoRol from UserRoles a, User  b where b.email =:email and a.user.id = b.id")
+    public List<String> getRolesByUsername(@Param("email") String email);
 }

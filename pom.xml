@@ -83,7 +83,14 @@
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <version>4.0.7</version>
-        </dependency>    
+        </dependency>   
+        
+        <!--2019-04-01: JSON WebToken comienza el curso-->
+         <dependency>
+             <groupId>io.jsonwebtoken</groupId>
+             <artifactId>jjwt</artifactId>
+             <version>0.9.0</version>
+         </dependency> 
             
     </dependencies>
 

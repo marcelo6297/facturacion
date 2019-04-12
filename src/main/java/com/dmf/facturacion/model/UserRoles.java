@@ -6,29 +6,37 @@
 package com.dmf.facturacion.model;
 
 import java.io.Serializable;
-import javax.annotation.Generated;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.NaturalId;
 
 /**
  *
  * @author marcelo
  * El rol y el usuario deben ser UNICOS
  */
-@Entity
+@Entity()
+@Table(name = "roles")
 public class UserRoles implements Serializable{
-    
-    
-    private Long id;
-    private String userRole;
-    private Long userId;
-    
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @Enumerated(EnumType.STRING)
+    private TipoRol tipoRol;
+    
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
+    
     public Long getId() {
         return id;
     }
@@ -36,24 +44,45 @@ public class UserRoles implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-    
-    @Column(name="user_role", unique = true)
-    public String getRole() {
-        return userRole;
+
+    public TipoRol getTipoRol() {
+        return tipoRol;
     }
 
-    public void setRole(String role) {
-        this.userRole = role;
+    public void setTipoRol(TipoRol rol) {
+        this.tipoRol = rol;
     }
     
-    @Column(name = "user_id")
-    public Long getUserId() {
-        return userId;
+    public void setTipoRol(String rol){
+        this.tipoRol = TipoRol.valueOf(rol);
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public UserRoles(Long id, TipoRol rol) {
+        this.id = id;
+        this.tipoRol = rol;
     }
+
+    public UserRoles() {
+        tipoRol = TipoRol.USER;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public UserRoles(String rol) {
+        
+        this.tipoRol = TipoRol.valueOf(rol);
+    }
+
+   
+   
+    
+    
     
     
 }

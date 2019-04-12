@@ -8,12 +8,16 @@ package com.dmf.facturacion.servicios;
 import com.dmf.facturacion.model.User;
 import com.dmf.facturacion.repositorios.UserRepository;
 import com.dmf.facturacion.repositorios.UserRoleRepository;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -25,7 +29,13 @@ public class UserServices implements UserDetailsService{
     private UserRepository userRepository;
     private UserRoleRepository userRoleRepository;
     
+    public UserRepository getRepo(){
+        return this.userRepository;
+    }
     
+    public UserRoleRepository getRolRepo(){
+        return userRoleRepository;
+    }
     
     
 
@@ -38,9 +48,7 @@ public class UserServices implements UserDetailsService{
         }
         else {
             return new CustomUserDetails(user, userRoles);
-        }
-        
-        
+        } 
     }
 
     @Autowired
@@ -48,5 +56,12 @@ public class UserServices implements UserDetailsService{
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
     }
+
+    public Collection<? extends GrantedAuthority> getAuthoritiesByUsername(String username) {
+        List<String> userRoles = userRoleRepository.getRolesByUsername(username);
+        String roles = StringUtils.collectionToCommaDelimitedString(userRoles);
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+    }
+
     
 }

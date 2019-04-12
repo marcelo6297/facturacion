@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +56,7 @@ public class ClienteRestController {
 
     @GetMapping
     public Iterable<Cliente> all(Pageable pgbl) {
-        System.out.println("Listando los usuarios\r");
+        System.out.println("Listando los clientes\r");
         return clienteRepository.findAll(pgbl);
     }
 
@@ -92,6 +93,8 @@ public class ClienteRestController {
 
     @PostMapping(value = "/delete")
     @Transactional
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Cliente deleteAll(@RequestBody Long[] ids) {
         
         for (Long id : ids) 
