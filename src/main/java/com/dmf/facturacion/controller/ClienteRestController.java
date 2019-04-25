@@ -77,7 +77,7 @@ public class ClienteRestController {
     @GetMapping(value = "/tipos")
     public List<TipoCliente> allTipos(ModelMap model) {
         System.out.println("Listando los tipos\r");
-        List<TipoCliente> tipos = Arrays.asList(new TipoCliente[]{TipoCliente.OCACIONAL, TipoCliente.MINORISTA, TipoCliente.MAYORISTA, TipoCliente.DISTRIBUIDOR});
+        List<TipoCliente> tipos = Arrays.asList(TipoCliente.values());
         return tipos;
     }
 

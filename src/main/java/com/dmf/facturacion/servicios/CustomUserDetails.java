@@ -8,6 +8,7 @@ package com.dmf.facturacion.servicios;
 import com.dmf.facturacion.model.User;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,8 @@ public class CustomUserDetails implements UserDetails{
     
     User user;
     List<String> userRoles;
+    @Value("${com.dfm.facturacion.security.maxFailureAttempts}")
+    private Integer maxAttempts=5;
 
     public CustomUserDetails(User user, List<String> userRoles) {
         this.user = user;
@@ -54,7 +57,8 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;//To change body of generated methods, choose Tools | Templates.
+        return  maxAttempts > user.getFailedAttempts();
+       
     }
 
     @Override
@@ -64,7 +68,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return  user.getEnabled() > 0;
+        return  user.getEnabled();
     }
     
 }

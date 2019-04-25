@@ -5,18 +5,22 @@
  */
 package com.dmf.facturacion.model;
 
+import com.dmf.facturacion.security.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.Cascade;
 
 /**
  *
@@ -39,14 +43,19 @@ public class User implements Serializable{
     private String direccion;
     @Column
     @NotNull
+    @JsonView(View.Never.class)
     private String password;
     @Column
-    private int enabled;
+    private boolean enabled;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-   
-    private Set<UserRoles> roles = new HashSet<>();;
+    @JsonView(View.Never.class)
+    @Column
+    private int failedAttempts=0;
     
+    
+    
+    @OneToMany( fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserRoles> roles = new HashSet<>();
     
     public Long getId() {
         return id;
@@ -78,11 +87,12 @@ public class User implements Serializable{
     }
     
   
-    public int getEnabled() {
+    
+    public boolean getEnabled() {
         return enabled;
     }
-
-    public void setEnabled(int enabled) {
+    
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -97,7 +107,7 @@ public class User implements Serializable{
         this.roles = roles;
     }
 
-    public User(Long id, String email, String nombre, String apellido, String direccion, String password, int enabled, Set<UserRoles> roles) {
+    public User(Long id, String email, String nombre, String apellido, String direccion, String password, boolean enabled, int failedAttempts) {
         this.id = id;
         this.email = email;
         this.nombre = nombre;
@@ -105,9 +115,12 @@ public class User implements Serializable{
         this.direccion = direccion;
         this.password = password;
         this.enabled = enabled;
-        this.roles = roles;
+        this.failedAttempts = failedAttempts;
     }
 
+
+
+    
     public String getNombre() {
         return nombre;
     }
@@ -130,6 +143,14 @@ public class User implements Serializable{
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(int failedAttempts) {
+        this.failedAttempts = failedAttempts;
     }
     
     

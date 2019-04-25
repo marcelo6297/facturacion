@@ -4,8 +4,10 @@
  */
 package com.dmf.facturacion.model;
 
+import com.dmf.facturacion.security.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -39,7 +41,9 @@ public class Producto implements Serializable {
     private String                  notas;
     private Boolean                 activo;
     
+    @JsonView(View.Admin.class)
     private Double                  precioCompra   = 0.0;
+    @JsonView(View.Admin.class)
     private Integer                 porcenGan      = 35;
     private Double                  precioVenta    = 0.0;
     private Integer                 porcenIva            = 0;

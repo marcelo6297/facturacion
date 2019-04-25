@@ -59,7 +59,7 @@ public class WebAppSecurity extends WebSecurityConfigurerAdapter {
             .and()
             .cors().and().csrf().disable()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST,"/api/user/login").permitAll()
+            .antMatchers(HttpMethod.POST,"/api/principal/login").permitAll()
             .antMatchers("/api/**").authenticated()
 //            .antMatchers("/index.html").permitAll()
 //            .antMatchers("/clientes/**").permitAll()

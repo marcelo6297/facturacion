@@ -41,11 +41,19 @@ public class UserTest {
         
         
         UserRoles rol = new UserRoles();
-        User u = new User(null, "admin@gmail.com", "admin", "admin", "sin direccion", passEncod.encode("admin"), 1, null);
+        User u = new User(null, "admin@gmail.com", "admin", "admin", "sin direccion", passEncod.encode("admin"), true, 0);
         
         srvc.getRepo().save(u);
         rol.setTipoRol(TipoRol.USER);
         rol.setUser(u);
         srvc.getRolRepo().save(rol);
+        
+        u = new User(null, "admin@admin.com", "admin", "admin", "sin direccion", passEncod.encode("admin"), true, 0);
+        UserRoles rol2 = new UserRoles();
+        srvc.getRepo().save(u);
+        rol2.setTipoRol(TipoRol.ADMIN);
+        rol2.setUser(u);
+        srvc.getRolRepo().save(rol2);
+        
     }
 }

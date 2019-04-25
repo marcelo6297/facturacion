@@ -7,7 +7,9 @@ package com.dmf.facturacion.controller;
 
 import com.dmf.facturacion.filtros.ProductoFilter;
 import com.dmf.facturacion.model.Producto;
+import com.dmf.facturacion.security.View;
 import com.dmf.facturacion.servicios.ProductoServices;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.querydsl.core.types.Predicate;
@@ -43,7 +45,7 @@ public class ProductoRestController {
     private ProductoServices _srvc;
     
     @GetMapping
-    public Iterable<Producto> all(Predicate predicate , Pageable pageReq) {
+    public Iterable<Producto> all(Pageable pageReq) {
 //        String headerKey = "x-record-count";
 //        Long count = _srvc.productoRepo().count();
 //        String headerValue = (count.toString());
@@ -51,12 +53,13 @@ public class ProductoRestController {
         //como paginar una respuesta.
 //        ObjectMapper mapper = new ObjectMapper();
            
-        return _srvc.productoRepo().findAll(predicate ,pageReq);
+        return _srvc.productoRepo().findAll(pageReq);
         
 //        return _srvc.productoRepo().findAll();
     }
     
     @GetMapping("/search")
+    @JsonView(View.Public.class)
     public List<Producto> search(@RequestParam("search") String search, @RequestParam(name="ids", required = false) Long... ids){
         
         if (ids == null) {

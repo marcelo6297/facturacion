@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dmf.facturacion.model;
+package com.dmf.facturacion.security;
 
 /**
  *
  * @author marcelo
  */
-public enum TipoRol {
-    USER,CAJA,PRODUCTO,COMPRA,VENTA,FACT,ADMIN;
+public class View {
+    public static class Public{}
+    public static class Admin extends Public{}
+    public static class Never extends Admin{}
 }

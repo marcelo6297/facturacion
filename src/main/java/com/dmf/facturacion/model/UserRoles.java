@@ -5,6 +5,7 @@
  */
 package com.dmf.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,6 +36,7 @@ public class UserRoles implements Serializable{
     
     @ManyToOne()
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     
     public Long getId() {
