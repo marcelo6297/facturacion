@@ -66,6 +66,13 @@ public class PrincipalController {
              user.setFailedAttempts(0);
             _srvc.getRepo().save(user);
          }
+         
+//         if (!user.getEnabled()) {
+//             throw new BadCredentialsException("Cuenta bloqueada!!!");
+//         }
+//         if (!user.isAccountNonExpired()) {
+//             throw new BadCredentialsException("Cuenta expirada!!!");
+//         }
         
          return ResponseEntity.ok(new JwtResponse(token, u.getEmail(), 
                  userDetails.getAuthorities()));

@@ -20,6 +20,7 @@ public class Constants {
 //        JWT
         public static final String JWT_SECRET = "3sun4h3m0s4fr4s3" ;
         public static final String JWT_ISSUER_INFO = "FACTURACIONBACKEND" ;
-        public static final int    JWT_EXPIRATION = 864000000 ;
+//        Tiempo de vigencia del token 8 horas
+        public static final int    JWT_EXPIRATION = 8*60*60*1000 ;
     
 }

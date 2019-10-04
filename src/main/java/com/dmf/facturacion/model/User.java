@@ -8,10 +8,9 @@ package com.dmf.facturacion.model;
 import com.dmf.facturacion.security.View;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,8 +18,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import org.hibernate.annotations.Cascade;
 
 /**
  *
@@ -52,7 +52,10 @@ public class User implements Serializable{
     @Column
     private int failedAttempts=0;
     
-    
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonView(View.Admin.class)
+    private Date expireOn = new Date(System.currentTimeMillis() +30*24*60*60*1000);
     
     @OneToMany( fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRoles> roles = new HashSet<>();
@@ -152,8 +155,19 @@ public class User implements Serializable{
     public void setFailedAttempts(int failedAttempts) {
         this.failedAttempts = failedAttempts;
     }
+
+    public Date getExpireOn() {
+        return expireOn;
+    }
+
+    public void setExpireOn(Date expireOn) {
+        this.expireOn = expireOn;
+    }
     
-    
+    @JsonView(View.Never.class)
+    public boolean isAccountNonExpired() {
+        return System.currentTimeMillis() < expireOn.getTime();
+    }
     
     
 }

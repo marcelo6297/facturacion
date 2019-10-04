@@ -5,24 +5,22 @@
  */
 package com.dmf.facturacion.security;
 
+import com.dmf.facturacion.model.User;
 import static com.dmf.facturacion.security.Constants.HEADER_AUTHORIZACION_KEY;
 import static com.dmf.facturacion.security.Constants.TOKEN_BEARER_PREFIX;
 import com.dmf.facturacion.servicios.UserServices;
 import io.jsonwebtoken.Jwts;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -40,6 +38,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
  
     private Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
     
+    private User currentUser;
+    
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager, UserServices srvc) {
         super(authenticationManager);
         this.srvc = srvc;
@@ -54,6 +54,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
             return;
         }
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        if (authentication == null){
+            chain.doFilter(req, res);
+            return;
+        }
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
@@ -72,7 +76,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
 			if (user != null) {
                             
 //                            aqui debo verifiar todos los parametros para ver si sigue valido el token
-                            
+                            currentUser = srvc.getRepo().findByEmail(user);
+                            if (!currentUser.getEnabled() || !currentUser.isAccountNonExpired()) {
+                                return null;
+                            }        
                             return new UsernamePasswordAuthenticationToken(user, null, srvc.getAuthoritiesByUsername(user));
 			}
 			return null;

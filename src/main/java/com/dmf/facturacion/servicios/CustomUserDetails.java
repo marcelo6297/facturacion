@@ -52,7 +52,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;//To change body of generated methods, choose Tools | Templates.
+        return user.isAccountNonExpired();
     }
 
     @Override
